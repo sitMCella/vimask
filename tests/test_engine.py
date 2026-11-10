@@ -70,6 +70,9 @@ def test_saturated_scores_rank_by_strength(kb):
 def test_tokenize_synonyms():
     assert tokenize("Remove the parentheses") == ["delete", "paren"]
     assert "yank" in tokenize("copy a word")
+    # {N} placeholders and a bare "n" in the question meet {count} entries
+    assert tokenize("jump to line n") == ["go", "line", "count"]
+    assert "count" in tokenize("Go to tab page number {N}.")
 
 
 def test_retrieval_scores_are_normalized(kb):
@@ -208,6 +211,34 @@ def test_selector_cannot_inject_ids(cfg, kb):
         assert resp.confidence == "medium"
     else:
         assert isinstance(resp, NotFound)
+
+
+def test_selector_failure_degrades_to_retrieval(cfg, kb):
+    """A timed-out selector (chat_json -> None) must not turn a KB hit into "not found"."""
+    client = FakeClient([])  # every call returns None, like a timeout
+    eng = Engine(cfg, kb, client=client, use_selector=True, use_embeddings=False, log_missing=False)
+    eng.cfg.fast_score_lexical_only = 2.0
+    resp = eng.answer("please jump over to line n")
+    assert eng.last_trace.selector_called
+    assert eng.last_trace.note == "selector unavailable"
+    assert isinstance(resp, Answer)
+    assert resp.primary.id == "mo-goto-line"
+
+
+def test_selector_alternative_of_top1_is_not_disagreement(cfg, kb):
+    """Choosing a declared alternative of retrieval's top-1 outside the top 3 is medium, not fallback."""
+    eng = Engine(cfg, kb, client=None, use_selector=False, use_embeddings=False, log_missing=False)
+    rr = eng.retriever.retrieve("please jump over to line n", k=cfg.top_k)
+    top = rr.candidates[0].entry
+    alt = next(c.entry.id for c in rr.candidates[3:] if c.entry.id in top.alternatives or top.id in c.entry.alternatives)
+    client = FakeClient([{"ids": [alt], "compose": False}])
+    eng = Engine(cfg, kb, client=client, use_selector=True, use_embeddings=False, log_missing=False)
+    eng.cfg.fast_score_lexical_only = 2.0
+    eng.retriever.retrieve = lambda *a, **k: rr
+    resp = eng.answer("please jump over to line n")
+    assert isinstance(resp, Answer)
+    assert resp.primary.id == alt
+    assert resp.confidence == "medium"
 
 
 @needs_vim
