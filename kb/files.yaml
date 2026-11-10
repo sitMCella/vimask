@@ -1,0 +1,644 @@
+# Files: saving, quitting, opening, reading.
+
+- id: save
+  keys: ":w"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Write (save) the current file.
+  aliases:
+  - save file
+  - save
+  - write the file to disk
+  - save changes
+  help_tag: ":w"
+  alternatives: [save-quit, save-as, save-all]
+  effect: The buffer is written to its file.
+  verified: tag
+
+- id: save-as
+  keys: ":w {filename}"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Write the buffer to {filename} (save a copy; the buffer keeps its name).
+  aliases:
+  - save as
+  - save to a different file name
+  - write to another file
+  help_tag: ":w_f"
+  alternatives: [save, save-rename]
+  effect: A file with the given name is written.
+  verified: tag
+
+- id: save-rename
+  keys: ":saveas {filename}"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Save under a new name and continue editing the new file.
+  aliases:
+  - rename the current file
+  - save as and switch to the new file
+  help_tag: ":saveas"
+  alternatives: [save-as]
+  effect: The buffer is written to the new name and now edits that file.
+  verified: tag
+
+- id: save-all
+  keys: ":wa"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Write all changed buffers.
+  aliases:
+  - save all files
+  - write all open buffers
+  help_tag: ":wa"
+  alternatives: [save, save-quit-all]
+  effect: Every modified buffer is written.
+  verified: tag
+
+- id: save-force
+  keys: ":w!"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Force-write the file (e.g. when 'readonly' is set).
+  aliases:
+  - force save
+  - save a readonly file
+  - override read only
+  help_tag: ":w!"
+  alternatives: [save, save-sudo]
+  effect: The file is written even if read-only, when permissions allow.
+  verified: tag
+
+- id: save-sudo
+  keys: ":w !sudo tee %"
+  kind: ex
+  mode: normal
+  category: files/save
+  description: Save a file you do not have permission to write, via sudo (Vim only; in Neovim use a terminal).
+  aliases:
+  - save a file as root
+  - write a file without permission
+  - forgot to open with sudo
+  help_tag: ":w_c"
+  alternatives: [save-force]
+  effect: Buffer text is piped to sudo tee which writes the file; answer L to reload.
+  verified: tag
+
+- id: quit
+  keys: ":q"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Quit the current window; fails if there are unsaved changes.
+  aliases:
+  - quit vim
+  - exit
+  - close vim
+  - how do i exit vim
+  - leave vim
+  help_tag: ":q"
+  alternatives: [quit-force, save-quit, quit-all]
+  effect: The window closes; Vim exits when it is the last one.
+  verified: tag
+
+- id: quit-force
+  keys: ":q!"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Quit without saving, discarding changes.
+  aliases:
+  - quit without saving
+  - discard changes and exit
+  - force quit
+  - exit without saving
+  help_tag: ":q"
+  alternatives: [quit, quit-all-force]
+  effect: The window closes and changes are lost.
+  verified: tag
+
+- id: save-quit
+  keys: ":wq"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Write the file and quit.
+  aliases:
+  - save and quit
+  - save and exit
+  - write and close
+  help_tag: ":wq"
+  alternatives: [save-quit-x, quit, save-quit-all]
+  effect: The buffer is written and the window closes.
+  verified: tag
+
+- id: save-quit-x
+  keys: ":x"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Write the file only if it changed, then quit (also ZZ).
+  aliases:
+  - save if modified and quit
+  - exit saving only if needed
+  - zz to save and exit
+  help_tag: ":x"
+  alternatives: [save-quit, save-quit-zz]
+  effect: Writes only when modified, then quits.
+  verified: tag
+
+- id: save-quit-zz
+  keys: "ZZ"
+  kind: command
+  category: files/quit
+  description: Write the file if changed and quit (same as :x).
+  aliases:
+  - save and quit from normal mode
+  - shift z z
+  help_tag: "ZZ"
+  alternatives: [save-quit-x, quit-zq]
+  effect: Writes only when modified, then quits.
+  verified: tag
+
+- id: quit-zq
+  keys: "ZQ"
+  kind: command
+  category: files/quit
+  description: Quit without saving (same as :q!).
+  aliases:
+  - quit without saving from normal mode
+  - shift z q
+  help_tag: "ZQ"
+  alternatives: [quit-force, save-quit-zz]
+  effect: The window closes and changes are lost.
+  verified: tag
+
+- id: quit-all
+  keys: ":qa"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Quit all windows; fails if any buffer has unsaved changes.
+  aliases:
+  - quit everything
+  - close all windows and exit
+  - exit with multiple splits open
+  help_tag: ":qa"
+  alternatives: [quit-all-force, save-quit-all]
+  effect: Vim exits if nothing is modified.
+  verified: tag
+
+- id: quit-all-force
+  keys: ":qa!"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Quit all windows, discarding all changes.
+  aliases:
+  - quit everything without saving
+  - force exit all
+  help_tag: ":qa"
+  alternatives: [quit-all, quit-force]
+  effect: Vim exits; all unsaved changes are lost.
+  verified: tag
+
+- id: save-quit-all
+  keys: ":wqa"
+  kind: ex
+  mode: normal
+  category: files/quit
+  description: Write all changed buffers and quit.
+  aliases:
+  - save everything and exit
+  - write all and quit
+  - xa
+  help_tag: ":wqa"
+  alternatives: [quit-all, save-all]
+  effect: All modified buffers are written and Vim exits.
+  verified: tag
+
+- id: edit-file
+  keys: ":e {filename}"
+  kind: ex
+  mode: normal
+  category: files/open
+  description: Open (edit) a file in the current window.
+  aliases:
+  - open a file
+  - edit another file
+  - load file
+  - switch to a different file
+  help_tag: ":e"
+  alternatives: [edit-file-split, edit-reload, edit-file-under-cursor]
+  effect: The window shows the given file (Tab completes the name).
+  verified: tag
+
+- id: edit-reload
+  keys: ":e!"
+  kind: ex
+  mode: normal
+  category: files/open
+  description: Reload the file from disk, discarding unsaved changes.
+  aliases:
+  - revert to saved version
+  - reload the file
+  - discard all changes since last save
+  - refresh file from disk
+  help_tag: ":edit!"
+  alternatives: [edit-file, undo]
+  effect: The buffer is replaced by the file's on-disk content.
+  verified: tag
+
+- id: edit-file-split
+  keys: ":sp {filename}"
+  kind: ex
+  mode: normal
+  category: files/open
+  description: Open a file in a new horizontal split.
+  aliases:
+  - open file in split
+  - open another file next to this one
+  help_tag: ":split_f"
+  alternatives: [edit-file, window-vsplit-ex]
+  effect: A new window above shows the given file.
+  verified: tag
+
+- id: edit-file-under-cursor
+  keys: "gf"
+  kind: command
+  category: files/open
+  description: Open the file whose name is under the cursor.
+  aliases:
+  - open the file named under the cursor
+  - go to file
+  - follow a path in the text
+  help_tag: "gf"
+  alternatives: [edit-file, open-url]
+  effect: The file named under the cursor opens in the current window.
+  verified: tag
+
+- id: open-url
+  keys: "gx"
+  kind: command
+  category: files/open
+  description: Open the URL or file under the cursor with the system handler.
+  aliases:
+  - open link under cursor
+  - open url in browser
+  - follow link
+  help_tag: "gx"
+  alternatives: [edit-file-under-cursor]
+  effect: The URL under the cursor opens in your browser (via netrw in Vim, vim.ui.open in Neovim).
+  verified: tag
+
+- id: read-file
+  keys: ":r {filename}"
+  kind: ex
+  mode: normal
+  category: files/read
+  description: Insert the contents of a file below the cursor.
+  aliases:
+  - insert another file here
+  - read a file into the buffer
+  - include file contents
+  help_tag: ":r"
+  alternatives: [read-command, edit-file]
+  effect: The file's lines are inserted below the current line.
+  verified: tag
+
+- id: read-command
+  keys: ":r !{command}"
+  kind: ex
+  mode: normal
+  category: files/read
+  description: Insert the output of a shell command below the cursor.
+  aliases:
+  - insert command output
+  - paste the output of a shell command
+  - run a command and insert the result
+  - insert the date
+  help_tag: ":r!"
+  alternatives: [read-file, filter-lines]
+  effect: The command runs and its output is inserted below the current line.
+  verified: tag
+
+- id: filter-lines
+  keys: ":{range}!{command}"
+  kind: ex
+  mode: normal
+  category: files/shell
+  description: Filter lines through an external command (e.g. :%!sort, :'<,'>!jq .).
+  aliases:
+  - pipe lines through a shell command
+  - run the selection through a program
+  - filter text with an external command
+  - format json with jq
+  help_tag: ":range!"
+  alternatives: [read-command, sort-lines]
+  effect: The lines are replaced by the command's output.
+  verified: tag
+
+- id: shell-command
+  keys: ":!{command}"
+  kind: ex
+  mode: normal
+  category: files/shell
+  description: Run a shell command and show its output.
+  aliases:
+  - run a shell command
+  - execute a terminal command from vim
+  - run ls from inside vim
+  help_tag: ":!cmd"
+  alternatives: [read-command, terminal-open, filter-lines]
+  effect: The command runs; its output is shown; press Enter to return.
+  verified: tag
+
+- id: change-directory
+  keys: ":cd {dir}"
+  kind: ex
+  mode: normal
+  category: files/dir
+  description: Change the current working directory.
+  aliases:
+  - change directory
+  - set working directory
+  help_tag: ":cd"
+  alternatives: [print-directory, change-directory-current]
+  effect: Vim's working directory changes.
+  verified: tag
+
+- id: change-directory-current
+  keys: ":cd %:h"
+  kind: ex
+  mode: normal
+  category: files/dir
+  description: Change the working directory to the current file's directory.
+  aliases:
+  - cd to the directory of the current file
+  - set working directory to this file folder
+  help_tag: "filename-modifiers"
+  alternatives: [change-directory]
+  effect: Vim's working directory becomes the file's directory.
+  verified: tag
+
+- id: print-directory
+  keys: ":pwd"
+  kind: ex
+  mode: normal
+  category: files/dir
+  description: Print the current working directory.
+  aliases:
+  - show working directory
+  - what directory am i in
+  help_tag: ":pwd"
+  alternatives: [change-directory]
+  effect: The working directory is displayed.
+  verified: tag
+
+- id: file-explorer
+  keys: ":Explore"
+  kind: ex
+  mode: normal
+  category: files/open
+  description: Open the built-in file browser (netrw) in the current window.
+  aliases:
+  - browse files
+  - open file explorer
+  - show directory listing
+  - file tree
+  help_tag: ":Explore"
+  alternatives: [edit-directory, edit-file]
+  effect: A directory listing replaces the window; Enter opens a file.
+  verified: tag
+
+  flavor:
+  - vim
+- id: edit-directory
+  keys: ":e ."
+  kind: ex
+  mode: normal
+  category: files/open
+  description: Open the current directory in the file browser.
+  aliases:
+  - open current folder
+  - list files in current directory
+  help_tag: "netrw"
+  alternatives: [file-explorer]
+  effect: A netrw directory listing of the working directory appears.
+  verified: tag
+
+  flavor:
+  - vim
+- id: set-line-numbers
+  keys: ":set number"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Show line numbers.
+  aliases:
+  - show line numbers
+  - turn on line numbers
+  - display line numbers
+  - set nu
+  help_tag: "'number'"
+  alternatives: [set-relative-numbers, set-no-line-numbers]
+  effect: A line-number column appears on the left.
+  verified: tag
+
+- id: set-no-line-numbers
+  keys: ":set nonumber norelativenumber"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Hide line numbers.
+  aliases:
+  - hide line numbers
+  - turn off line numbers
+  - remove line numbers
+  help_tag: "'number'"
+  alternatives: [set-line-numbers]
+  effect: The line-number column disappears.
+  verified: tag
+
+- id: set-relative-numbers
+  keys: ":set relativenumber"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Show line numbers relative to the cursor line.
+  aliases:
+  - relative line numbers
+  - number lines relative to cursor
+  - set rnu
+  help_tag: "'relativenumber'"
+  alternatives: [set-line-numbers]
+  effect: Lines are numbered by distance from the cursor.
+  verified: tag
+
+- id: set-paste
+  keys: ":set paste"
+  kind: ex
+  mode: normal
+  category: options/edit
+  description: "Paste mode: disable auto-indent and mappings while pasting from outside (:set nopaste after)."
+  aliases:
+  - paste without auto indent
+  - pasting messes up indentation
+  - paste from terminal correctly
+  help_tag: "'paste'"
+  alternatives: [clipboard-paste]
+  effect: Pasted text keeps its indentation; turn off with :set nopaste.
+  verified: tag
+
+- id: set-wrap-off
+  keys: ":set nowrap"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Do not wrap long lines (scroll horizontally instead).
+  aliases:
+  - turn off line wrapping
+  - disable word wrap
+  - stop wrapping long lines
+  help_tag: "'wrap'"
+  alternatives: [set-wrap-on]
+  effect: Long lines extend past the window edge.
+  verified: tag
+
+- id: set-wrap-on
+  keys: ":set wrap"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Wrap long lines visually.
+  aliases:
+  - turn on line wrapping
+  - enable word wrap
+  help_tag: "'wrap'"
+  alternatives: [set-wrap-off]
+  effect: Long lines continue on the next screen line.
+  verified: tag
+
+- id: set-tabs-spaces
+  keys: ":set expandtab shiftwidth=4 tabstop=4"
+  kind: ex
+  mode: normal
+  category: options/edit
+  description: Use 4 spaces instead of tabs for indentation.
+  aliases:
+  - use spaces instead of tabs
+  - set indentation to 4 spaces
+  - configure tab width
+  help_tag: "'expandtab'"
+  alternatives: [retab]
+  effect: New indentation uses spaces; :retab converts existing tabs.
+  verified: tag
+
+- id: set-filetype
+  keys: ":set filetype={type}"
+  kind: ex
+  mode: normal
+  category: options/edit
+  description: Set the file type (syntax highlighting, indent rules), e.g. :set ft=json.
+  aliases:
+  - change syntax highlighting language
+  - set file type manually
+  - treat this file as json
+  help_tag: "'filetype'"
+  alternatives: [syntax-on]
+  effect: Syntax highlighting and filetype settings switch to the given type.
+  verified: tag
+
+- id: syntax-on
+  keys: ":syntax on"
+  kind: ex
+  mode: normal
+  category: options/display
+  description: Turn on syntax highlighting.
+  aliases:
+  - enable syntax highlighting
+  - colours for code
+  help_tag: ":syntax-on"
+  alternatives: [set-filetype]
+  effect: Syntax highlighting is enabled.
+  verified: tag
+
+- id: help-topic
+  keys: ":help {topic}"
+  kind: ex
+  mode: normal
+  category: help
+  description: Open Vim's built-in help for a topic (e.g. :help text-objects).
+  aliases:
+  - open help
+  - read the manual
+  - look up a command in the documentation
+  - get help
+  help_tag: ":help"
+  alternatives: [help-under-cursor, help-grep]
+  effect: A help window opens at the topic.
+  verified: tag
+
+- id: help-under-cursor
+  keys: "K"
+  kind: command
+  category: help
+  description: "Look up the keyword under the cursor ('keywordprg': man by default, :help in Vim script files)."
+  aliases:
+  - show documentation for word under cursor
+  - man page for word under cursor
+  - lookup keyword
+  help_tag: "K"
+  alternatives: [help-topic]
+  effect: Runs the keyword program on the word under the cursor.
+  verified: tag
+
+- id: help-grep
+  keys: ":helpgrep {pattern}"
+  kind: ex
+  mode: normal
+  category: help
+  description: Search all help files for a pattern (results in the quickfix list).
+  aliases:
+  - search the help
+  - grep the documentation
+  - find in help files
+  help_tag: ":helpgrep"
+  alternatives: [help-topic]
+  effect: Matching help lines fill the quickfix list; :cnext moves through them.
+  verified: tag
+
+- id: show-mappings
+  keys: ":map"
+  kind: ex
+  mode: normal
+  category: help
+  description: List current key mappings (:nmap, :imap, :vmap for one mode; :verbose map to see where defined).
+  aliases:
+  - show my key mappings
+  - list keybindings
+  - what is this key mapped to
+  help_tag: ":map"
+  alternatives: [help-topic]
+  effect: Displays mappings and their targets.
+  verified: tag
+
+- id: show-option
+  keys: ":set {option}?"
+  kind: ex
+  mode: normal
+  category: options
+  description: Show the current value of an option, e.g. :set shiftwidth?
+  aliases:
+  - check option value
+  - what is my shiftwidth
+  - print setting
+  help_tag: ":set"
+  alternatives: [help-topic]
+  effect: The option's value is displayed.
+  verified: tag

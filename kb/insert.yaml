@@ -1,0 +1,429 @@
+# Insert-mode commands. setup_keys enter insert mode; the example `after`
+# shows the buffer while still in insert mode (cursor between characters).
+
+- id: insert-exit
+  keys: "<Esc>"
+  kind: command
+  mode: insert
+  category: insert/exit
+  description: Leave insert mode and return to normal mode.
+  aliases:
+  - exit insert mode
+  - stop typing
+  - get back to normal mode
+  - escape
+  help_tag: "i_<Esc>"
+  alternatives: [insert-exit-ctrl-c, insert-exit-ctrl-bracket]
+  effect: Returns to normal mode; the cursor moves one character left.
+  verified: tag
+
+- id: insert-exit-ctrl-bracket
+  keys: "<C-[>"
+  kind: command
+  mode: insert
+  category: insert/exit
+  description: Leave insert mode (same as <Esc>, easier to reach on some keyboards).
+  aliases:
+  - alternative to escape
+  - escape without the esc key
+  help_tag: "i_CTRL-["
+  alternatives: [insert-exit]
+  effect: Returns to normal mode, exactly like <Esc>.
+  verified: tag
+
+- id: insert-exit-ctrl-c
+  keys: "<C-c>"
+  kind: command
+  mode: insert
+  category: insert/exit
+  description: Leave insert mode without triggering InsertLeave autocommands or abbreviations.
+  aliases:
+  - quit insert mode quickly
+  - control c in insert mode
+  help_tag: "i_CTRL-C"
+  alternatives: [insert-exit]
+  effect: Returns to normal mode; abbreviations are not expanded.
+  verified: tag
+
+- id: insert-delete-word
+  keys: "<C-w>"
+  kind: command
+  mode: insert
+  category: insert/delete
+  description: Delete the word before the cursor while in insert mode.
+  aliases:
+  - delete previous word while typing
+  - delete word backward in insert mode
+  - remove the last word i typed
+  help_tag: "i_CTRL-W"
+  alternatives: [insert-delete-line, insert-backspace]
+  setup_keys: "A"
+  example:
+    before: "one two thre┃e"
+    after: "one two ┃"
+  verified: example
+
+- id: insert-delete-line
+  keys: "<C-u>"
+  kind: command
+  mode: insert
+  category: insert/delete
+  description: Delete everything typed on the line before the cursor (back to where insert started, then to line start).
+  aliases:
+  - delete the whole line while typing
+  - clear what i typed on this line
+  - delete to start of line in insert mode
+  help_tag: "i_CTRL-U"
+  alternatives: [insert-delete-word]
+  setup_keys: "A"
+  example:
+    before: "one two thre┃e"
+    after: "┃"
+  verified: example
+
+- id: insert-backspace
+  keys: "<BS>"
+  kind: command
+  mode: insert
+  category: insert/delete
+  description: Delete the character before the cursor.
+  aliases:
+  - backspace
+  - delete previous character while typing
+  help_tag: "i_<BS>"
+  alternatives: [insert-delete-word, insert-del]
+  setup_keys: "A"
+  example:
+    before: "ab┃c"
+    after: "ab┃"
+  verified: example
+
+- id: insert-del
+  keys: "<Del>"
+  kind: command
+  mode: insert
+  category: insert/delete
+  description: Delete the character under the cursor while in insert mode.
+  aliases:
+  - forward delete in insert mode
+  - delete key
+  help_tag: "i_<Del>"
+  alternatives: [insert-backspace]
+  setup_keys: "i"
+  example:
+    before: "ab┃cd"
+    after: "ab┃d"
+  verified: example
+
+- id: insert-normal-command
+  keys: "<C-o>{command}"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Run one normal-mode command without leaving insert mode.
+  aliases:
+  - execute a normal command while in insert mode
+  - run one normal mode command and come back to insert
+  - temporarily leave insert mode
+  help_tag: "i_CTRL-O"
+  alternatives: [insert-exit]
+  setup_keys: "i"
+  example:
+    keys: "<C-o>$"
+    before: "┃abc def"
+    after: "abc def┃"
+  verified: example
+
+- id: insert-indent
+  keys: "<C-t>"
+  kind: command
+  mode: insert
+  category: insert/indent
+  description: Indent the current line one shiftwidth while in insert mode.
+  aliases:
+  - indent while typing
+  - add indentation in insert mode
+  help_tag: "i_CTRL-T"
+  alternatives: [insert-dedent, indent-line]
+  setup_keys: "A"
+  example:
+    before: "ab┃c"
+    after: "    abc┃"
+  verified: example
+
+- id: insert-dedent
+  keys: "<C-d>"
+  kind: command
+  mode: insert
+  category: insert/indent
+  description: Unindent the current line one shiftwidth while in insert mode.
+  aliases:
+  - unindent while typing
+  - remove indentation in insert mode
+  help_tag: "i_CTRL-D"
+  alternatives: [insert-indent, dedent-line]
+  setup_keys: "A"
+  example:
+    before: "    ab┃c"
+    after: "abc┃"
+  verified: example
+
+- id: insert-copy-above
+  keys: "<C-y>"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Insert the character that is above the cursor.
+  aliases:
+  - copy character from the line above
+  - repeat the character above while typing
+  help_tag: "i_CTRL-Y"
+  alternatives: [insert-copy-below]
+  setup_keys: "A"
+  example:
+    before: "abcd\na┃"
+    after: "abcd\nab┃"
+  verified: example
+
+- id: insert-copy-below
+  keys: "<C-e>"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Insert the character that is below the cursor.
+  aliases:
+  - copy character from the line below
+  help_tag: "i_CTRL-E"
+  alternatives: [insert-copy-above]
+  setup_keys: "A"
+  example:
+    before: "a┃\nabcd"
+    after: "ab┃\nabcd"
+  verified: example
+
+- id: insert-literal
+  keys: "<C-v>{char}"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Insert the next character literally (e.g. a real Tab with 'expandtab', or a control character).
+  aliases:
+  - insert a literal tab
+  - type a control character
+  - insert special character literally
+  help_tag: "i_CTRL-V"
+  alternatives: [insert-digraph, insert-unicode]
+  setup_keys: "A"
+  example:
+    keys: "<C-v><Tab>"
+    before: "a┃"
+    after: "a\t┃"
+  verified: example
+
+- id: insert-unicode
+  keys: "<C-v>u{hex}"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Insert a Unicode character by its hexadecimal code point.
+  aliases:
+  - type a unicode character by code
+  - insert character by hex code
+  - insert emoji by codepoint
+  help_tag: "i_CTRL-V_digit"
+  alternatives: [insert-digraph, insert-literal]
+  setup_keys: "A"
+  example:
+    keys: "<C-v>u00e9"
+    before: "caf┃"
+    after: "café┃"
+  verified: example
+
+- id: insert-digraph
+  keys: "<C-k>{char1}{char2}"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: "Insert a digraph (e.g. <C-k>e' gives é, <C-k>a: gives ä)."
+  aliases:
+  - type accented characters
+  - insert special characters like umlauts
+  - digraph
+  help_tag: "i_CTRL-K"
+  alternatives: [insert-unicode, insert-literal]
+  setup_keys: "A"
+  example:
+    keys: "<C-k>e'"
+    before: "caf┃"
+    after: "café┃"
+  verified: example
+
+- id: insert-complete-next
+  keys: "<C-n>"
+  kind: command
+  mode: insert
+  category: insert/completion
+  description: "Keyword completion: next match from the buffer (autocomplete words)."
+  aliases:
+  - autocomplete a word
+  - complete the word i am typing
+  - word completion
+  help_tag: "i_CTRL-N"
+  alternatives: [insert-complete-prev, insert-complete-line]
+  setup_keys: "A"
+  example:
+    before: "hello world\nhe┃"
+    after: "hello world\nhello┃"
+  verified: example
+
+- id: insert-complete-prev
+  keys: "<C-p>"
+  kind: command
+  mode: insert
+  category: insert/completion
+  description: "Keyword completion: previous match from the buffer."
+  aliases:
+  - autocomplete backwards
+  - complete word searching upward
+  help_tag: "i_CTRL-P"
+  alternatives: [insert-complete-next]
+  setup_keys: "A"
+  example:
+    before: "hello world\nwo┃"
+    after: "hello world\nworld┃"
+  verified: example
+
+- id: insert-complete-line
+  keys: "<C-x><C-l>"
+  kind: command
+  mode: insert
+  category: insert/completion
+  description: Complete a whole line from the buffer.
+  aliases:
+  - complete the whole line
+  - autocomplete entire line
+  - line completion
+  help_tag: "i_CTRL-X_CTRL-L"
+  alternatives: [insert-complete-next, insert-complete-filename]
+  setup_keys: "A"
+  example:
+    before: "hello big world\nhello┃"
+    after: "hello big world\nhello big world┃"
+  verified: example
+
+- id: insert-complete-filename
+  keys: "<C-x><C-f>"
+  kind: command
+  mode: insert
+  category: insert/completion
+  description: Complete a file name.
+  aliases:
+  - autocomplete a path
+  - file name completion
+  - complete file path while typing
+  help_tag: "i_CTRL-X_CTRL-F"
+  alternatives: [insert-complete-line]
+  effect: A menu of matching file names appears.
+  verified: tag
+
+- id: insert-newline-above-via-o
+  keys: "<C-o>O"
+  kind: command
+  mode: insert
+  category: insert/misc
+  description: Open a line above while staying in insert mode.
+  aliases:
+  - insert a new line above without leaving insert mode
+  help_tag: "i_CTRL-O"
+  alternatives: [open-above, insert-normal-command]
+  setup_keys: "A"
+  example:
+    before: "on┃e"
+    after: "┃\none"
+  verified: example
+
+- id: insert-register-word
+  keys: "<C-r><C-w>"
+  kind: command
+  mode: cmdline
+  category: cmdline
+  description: Insert the word under the cursor into the command line.
+  aliases:
+  - put the current word into the command line
+  - use word under cursor in a colon command
+  - insert word under cursor in search
+  help_tag: "c_CTRL-R_CTRL-W"
+  alternatives: [insert-register, search-word-under-cursor]
+  effect: The word under the cursor is typed into the command line (e.g. after :%s/).
+  verified: tag
+
+- id: cmdline-window
+  keys: "q:"
+  kind: command
+  category: cmdline
+  description: Open the command-line history window to edit and rerun previous commands.
+  aliases:
+  - command history
+  - edit a previous ex command
+  - show previous colon commands
+  help_tag: "q:"
+  alternatives: [search-history, cmdline-edit-window, repeat-last-ex]
+  effect: A window listing previous commands opens; Enter runs the chosen line.
+  verified: tag
+
+- id: cmdline-edit-window
+  keys: "<C-f>"
+  kind: command
+  mode: cmdline
+  category: cmdline
+  description: Open the command-line window from the command line.
+  aliases:
+  - edit the current command in a window
+  help_tag: "c_CTRL-F"
+  alternatives: [cmdline-window]
+  effect: Switches from the command line to the command-line window.
+  verified: tag
+
+- id: repeat-last-ex
+  keys: "@:"
+  kind: command
+  category: cmdline
+  description: Repeat the last command-line command.
+  aliases:
+  - repeat last colon command
+  - rerun previous ex command
+  - run the last command again
+  help_tag: "@:"
+  alternatives: [cmdline-window, repeat-change]
+  verified: tag
+
+  effect: 'The previous : command runs again.'
+- id: cmdline-history-prev
+  keys: "<Up>"
+  kind: command
+  mode: cmdline
+  category: cmdline
+  description: Recall the previous command line (matching what is already typed).
+  aliases:
+  - recall previous command
+  - go back in command history
+  - previous colon command
+  help_tag: "c_<Up>"
+  alternatives: [cmdline-window]
+  effect: The previous matching command replaces the command line.
+  verified: tag
+
+- id: cmdline-paste-register
+  keys: "<C-r>{register}"
+  kind: command
+  mode: cmdline
+  category: cmdline
+  description: Insert the contents of a register into the command line.
+  aliases:
+  - paste into the command line
+  - paste what i yanked into a colon command
+  - insert register in search
+  help_tag: "c_CTRL-R"
+  alternatives: [insert-register-word, insert-register]
+  effect: The register text is typed into the command line.
+  verified: tag

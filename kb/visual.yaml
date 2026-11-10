@@ -1,0 +1,502 @@
+# Visual mode. Entries with mode: visual have setup_keys that create the
+# selection; the renderer tells the user to select first.
+
+- id: visual-char
+  keys: "v"
+  kind: command
+  category: visual/enter
+  description: Start character-wise visual mode (select text).
+  aliases:
+  - select text
+  - start selecting characters
+  - enter visual mode
+  - highlight text
+  help_tag: "v"
+  alternatives: [visual-line, visual-block]
+  example:
+    keys: "ved"
+    before: "one ┃two three"
+    after: "one ┃ three"
+  verified: example
+
+- id: visual-line
+  keys: "V"
+  kind: command
+  category: visual/enter
+  description: Start line-wise visual mode (select whole lines).
+  aliases:
+  - select lines
+  - select whole lines
+  - linewise visual mode
+  - highlight entire lines
+  help_tag: "V"
+  alternatives: [visual-char, visual-block]
+  example:
+    keys: "Vjd"
+    before: "on┃e\ntwo\nthree"
+    after: "th┃ree"
+  verified: example
+
+- id: visual-block
+  keys: "<C-v>"
+  kind: command
+  category: visual/enter
+  description: Start block-wise visual mode (select a rectangle / column).
+  aliases:
+  - select a column
+  - block selection
+  - select a rectangle of text
+  - visual block mode
+  - column mode
+  help_tag: "CTRL-V"
+  alternatives: [visual-char, block-comment, block-append]
+  example:
+    keys: "<C-v>jd"
+    before: "┃abc\ndef"
+    after: "┃bc\nef"
+  verified: example
+
+- id: visual-reselect
+  keys: "gv"
+  kind: command
+  category: visual/select
+  description: Reselect the previous visual selection.
+  aliases:
+  - reselect last selection
+  - select the same text again
+  - restore previous visual area
+  help_tag: "gv"
+  alternatives: [visual-char]
+  setup_keys: "vee<Esc>0"
+  example:
+    keys: "gvd"
+    before: "┃one two three"
+    after: "┃ three"
+  verified: example
+
+- id: visual-other-end
+  keys: "o"
+  kind: command
+  mode: visual
+  category: visual/select
+  description: Go to the other end of the selection (to extend from the other side).
+  aliases:
+  - switch to the other end of the selection
+  - extend selection from the beginning instead
+  - move cursor to start of selection
+  help_tag: "v_o"
+  alternatives: [visual-char]
+  setup_keys: "ve"
+  example:
+    keys: "obd"
+    before: "one ┃two three"
+    after: "┃ three"
+  verified: example
+
+- id: visual-all
+  keys: "ggVG"
+  kind: command
+  category: visual/select
+  description: Select the whole buffer.
+  aliases:
+  - select all
+  - select everything
+  - highlight the whole file
+  - select all lines
+  help_tag: "V"
+  alternatives: [yank-all, delete-all]
+  example:
+    keys: "ggVGd"
+    before: "one\ntw┃o\nthree"
+    after: "┃"
+  verified: example
+
+- id: visual-delete
+  keys: "d"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Delete the selected text.
+  aliases:
+  - delete selection
+  - cut the highlighted text
+  - remove selected text
+  help_tag: "v_d"
+  alternatives: [visual-yank, visual-change]
+  setup_keys: "ve"
+  example:
+    before: "one ┃two three"
+    after: "one ┃ three"
+  verified: example
+
+- id: visual-yank
+  keys: "y"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Yank (copy) the selected text.
+  aliases:
+  - copy selection
+  - copy the highlighted text
+  - yank selected text
+  help_tag: "v_y"
+  alternatives: [visual-delete, paste-after]
+  setup_keys: "ve"
+  example:
+    keys: "yP"
+    before: "one ┃two three"
+    after: "one tw┃otwo three"
+  verified: example
+
+- id: visual-change
+  keys: "c"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Replace the selected text (delete it and enter insert mode).
+  aliases:
+  - replace selection with typed text
+  - change the highlighted text
+  - type over the selection
+  help_tag: "v_c"
+  alternatives: [visual-delete, visual-paste]
+  setup_keys: "ve"
+  example:
+    keys: "cX<Esc>"
+    before: "one ┃two three"
+    after: "one ┃X three"
+  verified: example
+
+- id: visual-paste
+  keys: "p"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Replace the selection with the register contents.
+  aliases:
+  - paste over selection
+  - replace selected text with what i copied
+  - paste onto highlighted text
+  help_tag: "v_p"
+  alternatives: [visual-change, paste-after]
+  setup_keys: "yiwwve"
+  example:
+    before: "┃one two three"
+    after: "one on┃e three"
+  verified: example
+
+- id: visual-indent
+  keys: ">"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Indent the selected lines by one shiftwidth.
+  aliases:
+  - indent selected lines
+  - indent a block of lines
+  - shift selection right
+  - indent multiple lines
+  help_tag: "v_>"
+  alternatives: [visual-dedent, indent-lines-count]
+  setup_keys: "Vj"
+  example:
+    before: "┃one\ntwo\nthree"
+    after: "┃    one\n    two\nthree"
+  verified: example
+
+- id: visual-dedent
+  keys: "<"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Unindent the selected lines by one shiftwidth.
+  aliases:
+  - unindent selected lines
+  - shift selection left
+  - outdent multiple lines
+  help_tag: "v_<"
+  alternatives: [visual-indent, dedent-line]
+  setup_keys: "Vj"
+  example:
+    before: "    on┃e\n    two\n    three"
+    after: "on┃e\ntwo\n    three"
+  verified: example
+
+- id: visual-uppercase
+  keys: "U"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Make the selected text uppercase.
+  aliases:
+  - uppercase selection
+  - convert highlighted text to upper case
+  help_tag: "v_U"
+  alternatives: [visual-lowercase, visual-togglecase, op-uppercase]
+  setup_keys: "ve"
+  example:
+    before: "one ┃two three"
+    after: "one ┃TWO three"
+  verified: example
+
+- id: visual-lowercase
+  keys: "u"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Make the selected text lowercase.
+  aliases:
+  - lowercase selection
+  - convert highlighted text to lower case
+  help_tag: "v_u"
+  alternatives: [visual-uppercase, op-lowercase]
+  setup_keys: "ve"
+  example:
+    before: "one ┃TWO three"
+    after: "one ┃two three"
+  verified: example
+
+- id: visual-togglecase
+  keys: "~"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Toggle the case of the selected text.
+  aliases:
+  - toggle case of selection
+  - invert case of highlighted text
+  help_tag: "v_~"
+  alternatives: [visual-uppercase, visual-lowercase]
+  setup_keys: "ve"
+  example:
+    before: "one ┃TwO three"
+    after: "one ┃tWo three"
+  verified: example
+
+- id: visual-join
+  keys: "J"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Join the selected lines.
+  aliases:
+  - join selected lines
+  - merge highlighted lines into one
+  help_tag: "v_J"
+  alternatives: [join-lines-count]
+  setup_keys: "Vjj"
+  example:
+    before: "┃one\ntwo\nthree\nfour"
+    after: "one two┃ three\nfour"
+  verified: example
+
+- id: visual-replace-char
+  keys: "r{char}"
+  kind: command
+  mode: visual
+  category: visual/edit
+  description: Replace every selected character with {char}.
+  aliases:
+  - replace selection with a single character
+  - fill selected text with x
+  - overwrite highlighted characters with one letter
+  help_tag: "v_r"
+  alternatives: [visual-change]
+  setup_keys: "ve"
+  example:
+    keys: "rx"
+    before: "one ┃two three"
+    after: "one ┃xxx three"
+  verified: example
+
+- id: visual-substitute
+  keys: ":s/{pattern}/{replacement}/g"
+  kind: ex
+  mode: visual
+  category: visual/edit
+  description: Replace within the selected lines (Vim inserts '<,'> automatically).
+  aliases:
+  - find and replace in selection
+  - substitute only in the highlighted lines
+  - replace in selected lines
+  help_tag: "v_:"
+  alternatives: [substitute-range, substitute-all]
+  setup_keys: "Vj"
+  example:
+    keys: ":s/x/y/g"
+    before: "┃x x\nx\nx"
+    after: "y y\n┃y\nx"
+  verified: example
+
+- id: visual-sort
+  keys: ":sort"
+  kind: ex
+  mode: visual
+  category: visual/edit
+  description: Sort the selected lines.
+  aliases:
+  - sort selected lines
+  - sort highlighted lines only
+  help_tag: ":sort"
+  alternatives: [sort-lines]
+  setup_keys: "Vjj"
+  example:
+    before: "┃c\nb\na\nz"
+    after: "┃a\nb\nc\nz"
+  verified: example
+
+- id: visual-search-selection
+  keys: "*"
+  kind: command
+  mode: visual
+  category: visual/search
+  description: Search for the word under the cursor (Vim); Neovim searches the selected text.
+  aliases:
+  - search for the selected text
+  - find other occurrences of highlighted text
+  help_tag: "star"
+  alternatives: [search-word-under-cursor]
+  effect: In Vim 9 * in visual mode searches the word under the cursor; Neovim 0.10+ searches the selection.
+  verified: tag
+
+- id: visual-inner-word
+  keys: "iw"
+  kind: command
+  mode: visual
+  category: visual/select
+  description: Extend the selection by a word (text objects work in visual mode).
+  aliases:
+  - select the current word
+  - select a word in visual mode
+  - highlight word under cursor
+  help_tag: "v_iw"
+  alternatives: [to-inner-word, visual-inner-paren]
+  example:
+    keys: "viwd"
+    before: "one tw┃o three"
+    after: "one ┃ three"
+  verified: example
+
+- id: visual-inner-paren
+  keys: "i("
+  kind: command
+  mode: visual
+  category: visual/select
+  description: Select everything inside the enclosing ( ).
+  aliases:
+  - select inside parentheses
+  - highlight the contents of the brackets
+  - select function arguments
+  help_tag: "v_i("
+  alternatives: [to-inner-paren, visual-inner-word]
+  example:
+    keys: "vi(d"
+    before: "f(a, ┃b)"
+    after: "f(┃)"
+  verified: example
+
+- id: visual-expand-paren
+  keys: "a("
+  kind: command
+  mode: visual
+  category: visual/select
+  description: Select the enclosing ( ) including the parentheses; repeat to grow outward.
+  aliases:
+  - expand selection to enclosing parentheses
+  - select outer brackets
+  - grow selection to surrounding parens
+  help_tag: "v_a("
+  alternatives: [visual-inner-paren, to-a-paren]
+  example:
+    keys: "va(d"
+    before: "x f(a, ┃b) y"
+    after: "x f┃ y"
+  verified: example
+
+- id: visual-block-insert
+  keys: "I"
+  kind: command
+  mode: visual
+  category: visual/block
+  description: In block mode, insert text at the start of every selected line.
+  aliases:
+  - insert on multiple lines at once
+  - type on several lines simultaneously
+  - insert text in a column
+  help_tag: "v_b_I"
+  alternatives: [visual-block-append, block-comment]
+  setup_keys: "<C-v>j"
+  example:
+    keys: "I# <Esc>"
+    before: "┃one\ntwo"
+    after: "┃# one\n# two"
+  verified: example
+
+- id: visual-block-append
+  keys: "A"
+  kind: command
+  mode: visual
+  category: visual/block
+  description: In block mode, append text after the block on every selected line.
+  aliases:
+  - append on multiple lines at once
+  - add text after a column on several lines
+  help_tag: "v_b_A"
+  alternatives: [visual-block-insert, block-append]
+  setup_keys: "<C-v>j"
+  example:
+    keys: "A-<Esc>"
+    before: "┃one\ntwo"
+    after: "┃o-ne\nt-wo"
+  verified: example
+
+- id: visual-block-change
+  keys: "c"
+  kind: command
+  mode: visual
+  category: visual/block
+  description: In block mode, replace the block on every selected line with typed text.
+  aliases:
+  - change a column of text on several lines
+  - replace the same text on multiple lines
+  help_tag: "v_b_c"
+  alternatives: [visual-block-insert, visual-change]
+  setup_keys: "<C-v>jl"
+  example:
+    keys: "cXY<Esc>"
+    before: "┃one\ntwo"
+    after: "X┃Ye\nXYo"
+  verified: example
+
+- id: visual-block-eol
+  keys: "$"
+  kind: command
+  mode: visual
+  category: visual/block
+  description: In block mode, extend the block to the end of every line (ragged right edge).
+  aliases:
+  - block select to end of lines of different length
+  - extend block selection to line ends
+  help_tag: "v_$"
+  alternatives: [visual-block-append, block-append]
+  setup_keys: "<C-v>j"
+  example:
+    keys: "$A;<Esc>"
+    before: "┃one\ntwelve"
+    after: "┃one;\ntwelve;"
+  verified: example
+
+- id: visual-exit
+  keys: "<Esc>"
+  kind: command
+  mode: visual
+  category: visual/enter
+  description: Leave visual mode without doing anything.
+  aliases:
+  - cancel selection
+  - exit visual mode
+  - deselect
+  help_tag: "v_<Esc>"
+  alternatives: [visual-char]
+  effect: The selection is dropped; the cursor stays where it is.
+  verified: tag

@@ -1,0 +1,312 @@
+# Macros and marks.
+
+- id: macro-record
+  keys: "q{register}"
+  kind: command
+  category: macros
+  description: Start recording a macro into register {register}; press q again to stop.
+  aliases:
+  - record a macro
+  - start recording keystrokes
+  - how do i make a macro
+  - record keystrokes to replay
+  help_tag: "q"
+  alternatives: [macro-stop, macro-replay]
+  example:
+    keys: "qaA;<Esc>jq"
+    before: "┃one\ntwo"
+    after: "one;\ntw┃o"
+  verified: example
+
+- id: macro-stop
+  keys: "q"
+  kind: command
+  category: macros
+  description: Stop recording the macro.
+  aliases:
+  - stop recording
+  - finish the macro
+  - end macro recording
+  help_tag: "q"
+  alternatives: [macro-record, macro-replay]
+  effect: Recording ends; the keystrokes are stored in the chosen register.
+  verified: tag
+
+- id: macro-replay
+  keys: "@{register}"
+  kind: command
+  category: macros
+  description: Replay the macro stored in register {register}.
+  aliases:
+  - run a macro
+  - play back the macro
+  - execute recorded keystrokes
+  - apply macro
+  help_tag: "@"
+  alternatives: [macro-repeat, macro-replay-count, macro-replay-lines]
+  setup_keys: ":let @a=\"A;\\ej\"<CR>"
+  example:
+    keys: "@a"
+    before: "┃one\ntwo\nthree"
+    after: "one;\ntw┃o\nthree"
+  verified: example
+
+  setup_desc: after recording the macro with qaA;<Esc>jq
+- id: macro-repeat
+  keys: "@@"
+  kind: command
+  category: macros
+  description: Repeat the last replayed macro.
+  aliases:
+  - run the macro again
+  - repeat last macro
+  - replay the same macro
+  help_tag: "@@"
+  alternatives: [macro-replay, macro-replay-count]
+  setup_keys: ":let @a=\"A;\\ej\"<CR>@a"
+  example:
+    before: "┃one\ntwo\nthree\nfour"
+    after: "one;\ntwo;\nthr┃ee\nfour"
+  verified: example
+
+  setup_desc: after recording qaA;<Esc>jq and running @a once
+- id: macro-replay-count
+  keys: "{count}@{register}"
+  kind: command
+  category: macros
+  description: Replay a macro {count} times.
+  aliases:
+  - run a macro multiple times
+  - execute the macro 10 times
+  - repeat macro n times
+  help_tag: "@"
+  alternatives: [macro-replay, macro-replay-lines]
+  setup_keys: ":let @a=\"A;\\ej\"<CR>"
+  example:
+    keys: "2@a"
+    before: "┃one\ntwo\nthree\nfour"
+    after: "one;\ntwo;\nthr┃ee\nfour"
+  verified: example
+
+  setup_desc: after recording the macro with qaA;<Esc>jq
+- id: macro-replay-lines
+  keys: ":{range}normal @{register}"
+  kind: ex
+  mode: normal
+  category: macros
+  description: Run a macro on every line of a range, e.g. :%normal @a or '<,'> after selecting.
+  aliases:
+  - run macro on every line
+  - apply macro to all lines
+  - execute macro on selected lines
+  - run macro on a range of lines
+  help_tag: ":normal"
+  alternatives: [macro-replay-count, macro-replay]
+  setup_keys: ":let @a=\"A;\\e\"<CR>"
+  example:
+    keys: ":2,3normal @a"
+    before: "┃one\ntwo\nthree"
+    after: "one\ntwo;\nthree┃;"
+  verified: example
+
+  setup_desc: after recording the macro with qaA;<Esc>q
+- id: macro-edit
+  keys: ":let @a='{keys}'"
+  kind: ex
+  mode: normal
+  category: macros
+  description: Edit or set a macro by assigning to its register.
+  aliases:
+  - edit a recorded macro
+  - change the contents of a macro
+  - fix a mistake in my macro
+  help_tag: ":let-@"
+  alternatives: [macro-record, paste-from-register]
+  effect: Register a now holds the given keystrokes; @a replays them.
+  verified: tag
+
+- id: mark-set
+  keys: "m{a-z}"
+  kind: command
+  category: marks
+  description: "Set a mark at the cursor position (lowercase: this file; uppercase: across files)."
+  aliases:
+  - set a mark
+  - bookmark a position
+  - remember this position
+  - mark the current line
+  help_tag: "m"
+  alternatives: [mark-jump, mark-jump-line, marks-list]
+  effect: Mark a is set; `a returns to the exact position, 'a to the line.
+  verified: tag
+
+- id: mark-jump
+  keys: "`{a-z}"
+  kind: command
+  category: marks
+  description: Jump to the exact position of a mark.
+  aliases:
+  - jump to mark
+  - go back to a bookmark
+  - return to the marked position
+  help_tag: "`"
+  alternatives: [mark-jump-line, mark-set]
+  setup_keys: "maG$"
+  example:
+    keys: "`a"
+    before: "one tw┃o\nthree"
+    after: "one tw┃o\nthree"
+  verified: example
+
+- id: mark-jump-line
+  keys: "'{a-z}"
+  kind: command
+  category: marks
+  description: Jump to the first non-blank of the line of a mark.
+  aliases:
+  - jump to the line of a mark
+  - go to the marked line
+  help_tag: "'"
+  alternatives: [mark-jump, mark-set]
+  setup_keys: "maG$"
+  example:
+    keys: "'a"
+    before: "  one tw┃o\nthree"
+    after: "  ┃one two\nthree"
+  verified: example
+
+- id: mark-last-insert
+  keys: "`^"
+  kind: command
+  category: marks
+  description: Jump to where insert mode was last exited.
+  aliases:
+  - go to where i stopped inserting
+  - position where insert mode was left
+  help_tag: "`^"
+  alternatives: [insert-at-last-insert, mo-last-change]
+  setup_keys: "Ax<Esc>G"
+  example:
+    before: "on┃e\ntwo"
+    after: "one┃x\ntwo"
+  verified: example
+
+- id: mark-last-yank-start
+  keys: "`["
+  kind: command
+  category: marks
+  description: Jump to the first character of the previously changed or yanked text.
+  aliases:
+  - go to the start of the text i just pasted
+  - start of last change
+  help_tag: "`["
+  alternatives: [mark-last-yank-end]
+  setup_keys: "yiwjp"
+  example:
+    before: "on┃e\nxy"
+    after: "one\nx┃oney"
+  verified: example
+
+- id: mark-last-yank-end
+  keys: "`]"
+  kind: command
+  category: marks
+  description: Jump to the last character of the previously changed or yanked text.
+  aliases:
+  - go to the end of the text i just pasted
+  - end of last change
+  help_tag: "`]"
+  alternatives: [mark-last-yank-start]
+  setup_keys: "yiwjp"
+  example:
+    before: "on┃e\nxy"
+    after: "one\nxon┃ey"
+  verified: example
+
+- id: mark-visual-start
+  keys: "`<"
+  kind: command
+  category: marks
+  description: Jump to the start of the last visual selection.
+  aliases:
+  - go to the beginning of the last selection
+  help_tag: "`<"
+  alternatives: [mark-visual-end, visual-reselect]
+  setup_keys: "lvl<Esc>$"
+  example:
+    before: "┃abcdef"
+    after: "a┃bcdef"
+  verified: example
+
+- id: mark-visual-end
+  keys: "`>"
+  kind: command
+  category: marks
+  description: Jump to the end of the last visual selection.
+  aliases:
+  - go to the end of the last selection
+  help_tag: "`>"
+  alternatives: [mark-visual-start, visual-reselect]
+  setup_keys: "lvl<Esc>0"
+  example:
+    before: "┃abcdef"
+    after: "ab┃cdef"
+  verified: example
+
+- id: marks-list
+  keys: ":marks"
+  kind: ex
+  mode: normal
+  category: marks
+  description: List all marks.
+  aliases:
+  - show marks
+  - list bookmarks
+  - what marks are set
+  help_tag: ":marks"
+  alternatives: [mark-set, marks-delete]
+  effect: Displays every mark with its line, column and text.
+  verified: tag
+
+- id: marks-delete
+  keys: ":delmarks {a-z}"
+  kind: ex
+  mode: normal
+  category: marks
+  description: Delete the given marks (:delmarks! deletes all lowercase marks).
+  aliases:
+  - delete a mark
+  - remove bookmark
+  - clear marks
+  help_tag: ":delmarks"
+  alternatives: [marks-list, mark-set]
+  effect: The named marks are removed.
+  verified: tag
+
+- id: jumps-list
+  keys: ":jumps"
+  kind: ex
+  mode: normal
+  category: marks
+  description: Show the jump list (used by CTRL-O and CTRL-I).
+  aliases:
+  - show jump list
+  - where have i jumped
+  help_tag: ":jumps"
+  alternatives: [mo-jump-older, changes-list]
+  effect: Displays the jump list.
+  verified: tag
+
+- id: changes-list
+  keys: ":changes"
+  kind: ex
+  mode: normal
+  category: marks
+  description: Show the change list (used by g; and g,).
+  aliases:
+  - show change list
+  - list recent change positions
+  help_tag: ":changes"
+  alternatives: [mo-change-older, jumps-list]
+  effect: Displays the change list.
+  verified: tag

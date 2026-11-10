@@ -1,0 +1,179 @@
+# Folding. Folds do not change text, so entries are tag-verified with effects.
+
+- id: fold-create
+  keys: "zf{motion}"
+  kind: command
+  category: folding
+  description: Create a fold over the lines covered by a motion (e.g. zfap, zf3j, or zf in visual mode).
+  aliases:
+  - create a fold
+  - fold these lines
+  - make a manual fold
+  - collapse lines into a fold
+  help_tag: "zf"
+  alternatives: [fold-open, fold-close, fold-delete, op-fold]
+  effect: The lines become one closed fold (needs 'foldmethod' manual or marker).
+  verified: tag
+
+- id: fold-open
+  keys: "zo"
+  kind: command
+  category: folding
+  description: Open the fold under the cursor.
+  aliases:
+  - open fold
+  - expand fold
+  - unfold
+  help_tag: "zo"
+  alternatives: [fold-close, fold-toggle, fold-open-all]
+  effect: The fold under the cursor opens one level.
+  verified: tag
+
+- id: fold-close
+  keys: "zc"
+  kind: command
+  category: folding
+  description: Close the fold under the cursor.
+  aliases:
+  - close fold
+  - collapse fold
+  - fold this block
+  help_tag: "zc"
+  alternatives: [fold-open, fold-toggle, fold-close-all]
+  effect: The fold under the cursor closes one level.
+  verified: tag
+
+- id: fold-toggle
+  keys: "za"
+  kind: command
+  category: folding
+  description: Toggle the fold under the cursor.
+  aliases:
+  - toggle fold
+  - open or close the fold
+  help_tag: "za"
+  alternatives: [fold-open, fold-close]
+  effect: A closed fold opens; an open fold closes.
+  verified: tag
+
+- id: fold-open-all
+  keys: "zR"
+  kind: command
+  category: folding
+  description: Open all folds in the buffer.
+  aliases:
+  - open all folds
+  - unfold everything
+  - expand all folds
+  help_tag: "zR"
+  alternatives: [fold-close-all, fold-open]
+  effect: Every fold is opened ('foldlevel' set to maximum).
+  verified: tag
+
+- id: fold-close-all
+  keys: "zM"
+  kind: command
+  category: folding
+  description: Close all folds in the buffer.
+  aliases:
+  - close all folds
+  - fold everything
+  - collapse all
+  help_tag: "zM"
+  alternatives: [fold-open-all, fold-close]
+  effect: Every fold is closed ('foldlevel' set to 0).
+  verified: tag
+
+- id: fold-delete
+  keys: "zd"
+  kind: command
+  category: folding
+  description: Delete the fold under the cursor (the text stays).
+  aliases:
+  - remove fold
+  - delete a fold without deleting text
+  help_tag: "zd"
+  alternatives: [fold-delete-all, fold-create]
+  effect: The fold marker is removed; the text is unchanged.
+  verified: tag
+
+- id: fold-delete-all
+  keys: "zE"
+  kind: command
+  category: folding
+  description: Eliminate all folds in the window.
+  aliases:
+  - remove all folds
+  - delete every fold
+  help_tag: "zE"
+  alternatives: [fold-delete]
+  effect: All manual folds are removed; text is unchanged.
+  verified: tag
+
+- id: fold-next
+  keys: "zj"
+  kind: command
+  category: folding
+  description: Move to the start of the next fold.
+  aliases:
+  - jump to next fold
+  - go to the next folded block
+  help_tag: "zj"
+  alternatives: [fold-prev]
+  effect: Cursor moves to the next fold.
+  verified: tag
+
+- id: fold-prev
+  keys: "zk"
+  kind: command
+  category: folding
+  description: Move to the end of the previous fold.
+  aliases:
+  - jump to previous fold
+  help_tag: "zk"
+  alternatives: [fold-next]
+  effect: Cursor moves to the previous fold.
+  verified: tag
+
+- id: fold-indent
+  keys: ":set foldmethod=indent"
+  kind: ex
+  mode: normal
+  category: folding
+  description: Fold automatically by indentation level.
+  aliases:
+  - fold by indentation
+  - automatic folding based on indent
+  - enable indent folding
+  help_tag: "fold-indent"
+  alternatives: [fold-syntax, fold-close-all]
+  effect: Folds are computed from indent; zM/zR close/open them.
+  verified: tag
+
+- id: fold-syntax
+  keys: ":set foldmethod=syntax"
+  kind: ex
+  mode: normal
+  category: folding
+  description: Fold automatically by syntax (if the filetype's syntax supports it).
+  aliases:
+  - fold by syntax
+  - fold functions automatically
+  - code folding
+  help_tag: "fold-syntax"
+  alternatives: [fold-indent]
+  effect: Folds are defined by the syntax file.
+  verified: tag
+
+- id: fold-toggle-enable
+  keys: "zi"
+  kind: command
+  category: folding
+  description: Toggle folding on and off ('foldenable').
+  aliases:
+  - disable folding temporarily
+  - turn folds off and on
+  help_tag: "zi"
+  alternatives: [fold-open-all]
+  effect: All folds open (folding disabled) or are restored.
+  verified: tag

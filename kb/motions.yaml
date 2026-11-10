@@ -1,0 +1,853 @@
+# Cursor motions. kind: motion entries are composable (operator + motion) and
+# carry a `sample` buffer for the composer plus a `noun` for composed
+# descriptions. `verified` is written by `vimask kb verify`; never edit it.
+
+- id: mo-word-forward
+  keys: "w"
+  kind: motion
+  mode: normal
+  category: movement/words
+  description: Move to the start of the next word.
+  noun: to the start of the next word
+  aliases:
+  - next word
+  - move forward one word
+  - jump to next word
+  - go forward a word
+  help_tag: "w"
+  alternatives: [mo-word-end, mo-bigword-forward]
+  example:
+    before: "one ┃two three"
+    after: "one two ┃three"
+  sample: "one ┃two three four five six seven eight"
+  verified: example
+
+- id: mo-word-end
+  keys: "e"
+  kind: motion
+  category: movement/words
+  description: Move to the end of the current or next word.
+  noun: to the end of the word
+  aliases:
+  - end of word
+  - jump to end of word
+  - move to last letter of word
+  help_tag: "e"
+  alternatives: [mo-word-forward, mo-bigword-end]
+  example:
+    before: "one ┃two three"
+    after: "one tw┃o three"
+  sample: "one ┃two three four five six seven eight"
+  verified: example
+
+- id: mo-word-backward
+  keys: "b"
+  kind: motion
+  category: movement/words
+  description: Move to the start of the previous word.
+  noun: to the start of the previous word
+  aliases:
+  - previous word
+  - move back one word
+  - go backward a word
+  - jump back a word
+  help_tag: "b"
+  alternatives: [mo-word-forward, mo-bigword-backward]
+  example:
+    before: "one two th┃ree"
+    after: "one two ┃three"
+  sample: "one two three four five six┃ seven"
+  verified: example
+
+- id: mo-word-end-backward
+  keys: "ge"
+  kind: motion
+  category: movement/words
+  description: Move backward to the end of the previous word.
+  noun: to the end of the previous word
+  aliases:
+  - end of previous word
+  - jump back to end of word
+  help_tag: "ge"
+  alternatives: [mo-word-backward]
+  example:
+    before: "one two th┃ree"
+    after: "one tw┃o three"
+  sample: "one two three four five six┃ seven"
+  verified: example
+
+- id: mo-bigword-forward
+  keys: "W"
+  kind: motion
+  category: movement/words
+  description: Move to the start of the next WORD (whitespace-separated).
+  noun: to the start of the next WORD
+  aliases:
+  - next word ignoring punctuation
+  - next whitespace separated word
+  - jump over punctuation to next word
+  help_tag: "W"
+  alternatives: [mo-word-forward]
+  example:
+    before: "foo.bar ┃baz.qux end"
+    after: "foo.bar baz.qux ┃end"
+  sample: "foo.bar ┃baz.qux a,b c;d e.f end"
+  verified: example
+
+- id: mo-bigword-end
+  keys: "E"
+  kind: motion
+  category: movement/words
+  description: Move to the end of the current or next WORD (whitespace-separated).
+  noun: to the end of the WORD
+  aliases:
+  - end of word ignoring punctuation
+  - end of whitespace separated word
+  help_tag: "E"
+  alternatives: [mo-word-end]
+  example:
+    before: "foo.bar ┃baz.qux end"
+    after: "foo.bar baz.qu┃x end"
+  sample: "foo.bar ┃baz.qux a,b c;d e.f end"
+  verified: example
+
+- id: mo-bigword-backward
+  keys: "B"
+  kind: motion
+  category: movement/words
+  description: Move to the start of the previous WORD (whitespace-separated).
+  noun: to the start of the previous WORD
+  aliases:
+  - previous word ignoring punctuation
+  - back one whitespace separated word
+  help_tag: "B"
+  alternatives: [mo-word-backward]
+  example:
+    before: "foo.bar baz.q┃ux end"
+    after: "foo.bar ┃baz.qux end"
+  sample: "foo.bar baz.qux a,b c;d e.f e┃nd"
+  verified: example
+
+- id: mo-line-start
+  keys: "0"
+  kind: motion
+  category: movement/line
+  description: Move to the first column of the line.
+  noun: to the start of the line
+  aliases:
+  - go to beginning of line
+  - start of line
+  - jump to column zero
+  - move to first character of line
+  help_tag: "0"
+  alternatives: [mo-first-nonblank, mo-line-end]
+  example:
+    before: "    foo ba┃r"
+    after: "┃    foo bar"
+  sample: "    foo bar ba┃z qux"
+  verified: example
+
+- id: mo-first-nonblank
+  keys: "^"
+  kind: motion
+  category: movement/line
+  description: Move to the first non-blank character of the line.
+  noun: to the first non-blank of the line
+  aliases:
+  - first non blank character
+  - beginning of text on line
+  - skip indentation go to start
+  - start of line after indent
+  help_tag: "^"
+  alternatives: [mo-line-start]
+  example:
+    before: "    foo ba┃r"
+    after: "    ┃foo bar"
+  sample: "    foo bar ba┃z qux"
+  verified: example
+
+- id: mo-line-end
+  keys: "$"
+  kind: motion
+  category: movement/line
+  description: Move to the end of the line.
+  noun: to the end of the line
+  aliases:
+  - go to end of line
+  - jump to last character of line
+  - move cursor to end of line
+  help_tag: "$"
+  alternatives: [mo-line-start, mo-last-nonblank]
+  example:
+    before: "foo ┃bar baz"
+    after: "foo bar ba┃z"
+  sample: "foo ┃bar baz qux"
+  verified: example
+
+- id: mo-last-nonblank
+  keys: "g_"
+  kind: motion
+  category: movement/line
+  description: Move to the last non-blank character of the line.
+  noun: to the last non-blank of the line
+  aliases:
+  - end of line ignoring trailing whitespace
+  - last non blank character
+  help_tag: "g_"
+  alternatives: [mo-line-end]
+  example:
+    before: "foo ┃bar   "
+    after: "foo ba┃r   "
+  sample: "foo ┃bar baz   "
+  verified: example
+
+- id: mo-find-char
+  keys: "f{char}"
+  kind: motion
+  category: movement/find
+  description: Move to the next occurrence of {char} on the line.
+  noun: forward to {char}
+  aliases:
+  - jump to character on line
+  - find character forward
+  - move to next occurrence of a letter
+  - go to the next comma
+  help_tag: "f"
+  alternatives: [mo-till-char, mo-find-char-back, mo-repeat-find]
+  example:
+    keys: "f("
+    before: "┃call(a, b)"
+    after: "call┃(a, b)"
+  sample: "┃call(a, b).then(c)"
+  verified: example
+
+- id: mo-find-char-back
+  keys: "F{char}"
+  kind: motion
+  category: movement/find
+  description: Move to the previous occurrence of {char} on the line.
+  noun: backward to {char}
+  aliases:
+  - find character backward
+  - jump back to character on line
+  help_tag: "F"
+  alternatives: [mo-find-char, mo-till-char-back]
+  example:
+    keys: "F("
+    before: "call(a, ┃b)"
+    after: "call┃(a, b)"
+  sample: "call(a, b).then(c┃)"
+  verified: example
+
+- id: mo-till-char
+  keys: "t{char}"
+  kind: motion
+  category: movement/find
+  description: Move to just before the next occurrence of {char} on the line.
+  noun: up to (not including) {char}
+  aliases:
+  - move until character
+  - jump to before a character
+  - up to but not including a character
+  - until the closing paren
+  help_tag: "t"
+  alternatives: [mo-find-char, mo-till-char-back]
+  example:
+    keys: "t)"
+    before: "call(┃a, b)"
+    after: "call(a, ┃b)"
+  sample: "call(┃a, b).then(c)"
+  verified: example
+
+- id: mo-till-char-back
+  keys: "T{char}"
+  kind: motion
+  category: movement/find
+  description: Move to just after the previous occurrence of {char} on the line.
+  noun: back to just after {char}
+  aliases:
+  - move backward until character
+  - back to just after a character
+  help_tag: "T"
+  alternatives: [mo-find-char-back, mo-till-char]
+  example:
+    keys: "T("
+    before: "call(a, ┃b)"
+    after: "call(┃a, b)"
+  sample: "call(a, b).then(c┃)"
+  verified: example
+
+- id: mo-repeat-find
+  keys: ";"
+  kind: motion
+  category: movement/find
+  description: Repeat the last f, F, t or T motion.
+  noun: to the next match of the last f/t
+  aliases:
+  - repeat last f
+  - next occurrence of the character searched with f
+  - repeat character search
+  help_tag: ";"
+  alternatives: [mo-repeat-find-reverse, mo-find-char]
+  setup_keys: "fa"
+  example:
+    before: "┃banana"
+    after: "ban┃ana"
+  sample: "┃banana bandana"
+  verified: example
+
+- id: mo-repeat-find-reverse
+  keys: ","
+  kind: motion
+  category: movement/find
+  description: Repeat the last f, F, t or T motion in the opposite direction.
+  noun: to the previous match of the last f/t
+  aliases:
+  - repeat f backwards
+  - previous occurrence of character searched with f
+  help_tag: ","
+  alternatives: [mo-repeat-find]
+  setup_keys: "fa;"
+  example:
+    before: "┃banana"
+    after: "b┃anana"
+  sample: "┃banana bandana"
+  verified: example
+
+- id: mo-down
+  keys: "j"
+  kind: motion
+  category: movement/basic
+  description: Move the cursor down one line.
+  noun: down a line
+  aliases:
+  - move down
+  - next line
+  - cursor down
+  help_tag: "j"
+  alternatives: [mo-up]
+  example:
+    before: "on┃e\ntwo\nthree"
+    after: "one\ntw┃o\nthree"
+  sample: "li┃ne one\nline two\nline three\nline four\nline five"
+  verified: example
+
+- id: mo-up
+  keys: "k"
+  kind: motion
+  category: movement/basic
+  description: Move the cursor up one line.
+  noun: up a line
+  aliases:
+  - move up
+  - previous line
+  - cursor up
+  help_tag: "k"
+  alternatives: [mo-down]
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "on┃e\ntwo\nthree"
+  sample: "line one\nline two\nline three\nli┃ne four\nline five"
+  verified: example
+
+- id: mo-left
+  keys: "h"
+  kind: motion
+  category: movement/basic
+  description: Move the cursor one character left.
+  noun: one character left
+  aliases:
+  - move left
+  - cursor left
+  help_tag: "h"
+  alternatives: [mo-right]
+  example:
+    before: "ab┃c"
+    after: "a┃bc"
+  sample: "abcd┃efgh"
+  verified: example
+
+- id: mo-right
+  keys: "l"
+  kind: motion
+  category: movement/basic
+  description: Move the cursor one character right.
+  noun: one character right
+  aliases:
+  - move right
+  - cursor right
+  help_tag: "l"
+  alternatives: [mo-left]
+  example:
+    before: "a┃bc"
+    after: "ab┃c"
+  sample: "abcd┃efgh"
+  verified: example
+
+- id: mo-file-start
+  keys: "gg"
+  kind: motion
+  category: movement/file
+  description: Go to the first line of the file.
+  noun: to the first line of the file
+  aliases:
+  - go to top of file
+  - jump to beginning of file
+  - first line
+  - start of the buffer
+  help_tag: "gg"
+  alternatives: [mo-file-end, mo-goto-line]
+  example:
+    before: "one\ntwo\nth┃ree"
+    after: "on┃e\ntwo\nthree"
+  sample: "one\ntwo\nth┃ree\nfour\nfive"
+  verified: example
+
+- id: mo-file-end
+  keys: "G"
+  kind: motion
+  category: movement/file
+  description: Go to the last line of the file.
+  noun: to the last line of the file
+  aliases:
+  - go to bottom of file
+  - jump to end of file
+  - last line
+  - end of the buffer
+  help_tag: "G"
+  alternatives: [mo-file-start, mo-goto-line]
+  example:
+    before: "┃one\ntwo\nthree"
+    after: "one\ntwo\n┃three"
+  sample: "one\ntwo\nth┃ree\nfour\nfive"
+  verified: example
+
+- id: mo-goto-line
+  keys: "{count}G"
+  kind: command
+  category: movement/file
+  description: Go to line {count}.
+  aliases:
+  - go to line number
+  - jump to a specific line
+  - move to line 42
+  help_tag: "G"
+  alternatives: [goto-line-ex, mo-file-start]
+  example:
+    keys: "2G"
+    before: "┃one\ntwo\nthree"
+    after: "one\n┃two\nthree"
+  verified: example
+
+- id: goto-line-ex
+  keys: ":{count}"
+  kind: ex
+  mode: normal
+  category: movement/file
+  description: Go to line {count} (ex command).
+  aliases:
+  - colon line number
+  - jump to line with colon
+  help_tag: ":range"
+  alternatives: [mo-goto-line]
+  example:
+    keys: ":3"
+    before: "┃one\ntwo\nthree"
+    after: "one\ntwo\n┃three"
+  verified: example
+
+- id: mo-paragraph-forward
+  keys: "}"
+  kind: motion
+  category: movement/paragraph
+  description: Move to the next blank line (end of paragraph).
+  noun: to the end of the paragraph
+  aliases:
+  - next paragraph
+  - jump to next blank line
+  - move forward a paragraph
+  help_tag: "}"
+  alternatives: [mo-paragraph-backward]
+  example:
+    before: "┃one\ntwo\n\nthree"
+    after: "one\ntwo\n┃\nthree"
+  sample: "┃one\ntwo\n\nthree\nfour\n\nfive"
+  verified: example
+
+- id: mo-paragraph-backward
+  keys: "{"
+  kind: motion
+  category: movement/paragraph
+  description: Move to the previous blank line (start of paragraph).
+  noun: to the start of the paragraph
+  aliases:
+  - previous paragraph
+  - jump to previous blank line
+  - move back a paragraph
+  help_tag: "{"
+  alternatives: [mo-paragraph-forward]
+  example:
+    before: "one\n\ntwo\nthr┃ee"
+    after: "one\n┃\ntwo\nthree"
+  sample: "one\ntwo\n\nthree\nfo┃ur\n\nfive"
+  verified: example
+
+- id: mo-sentence-forward
+  keys: ")"
+  kind: motion
+  category: movement/sentence
+  description: Move to the start of the next sentence.
+  noun: to the next sentence
+  aliases:
+  - next sentence
+  - jump forward a sentence
+  help_tag: ")"
+  alternatives: [mo-sentence-backward]
+  example:
+    before: "┃One two. Three four."
+    after: "One two. ┃Three four."
+  sample: "┃One two. Three four. Five six."
+  verified: example
+
+- id: mo-sentence-backward
+  keys: "("
+  kind: motion
+  category: movement/sentence
+  description: Move to the start of the current or previous sentence.
+  noun: to the previous sentence
+  aliases:
+  - previous sentence
+  - jump back a sentence
+  help_tag: "("
+  alternatives: [mo-sentence-forward]
+  example:
+    before: "One two. Three fo┃ur."
+    after: "One two. ┃Three four."
+  sample: "One two. Three four. Five s┃ix."
+  verified: example
+
+- id: mo-matching-bracket
+  keys: "%"
+  kind: motion
+  category: movement/brackets
+  description: Jump to the matching bracket ( ) [ ] { }.
+  noun: to the matching bracket
+  aliases:
+  - go to matching parenthesis
+  - jump to matching brace
+  - find closing bracket
+  - jump between matching parens
+  help_tag: "%"
+  alternatives: [to-inner-paren]
+  example:
+    before: "if ┃(a && (b)) x"
+    after: "if (a && (b)┃) x"
+  sample: "if ┃(a && (b)) { x }"
+  verified: example
+
+- id: mo-screen-top
+  keys: "H"
+  kind: command
+  category: movement/screen
+  description: Move to the top line of the window.
+  aliases:
+  - go to top of screen
+  - first visible line
+  help_tag: "H"
+  alternatives: [mo-screen-middle, mo-screen-bottom]
+  effect: Cursor moves to the first line visible in the window.
+  verified: tag
+
+- id: mo-screen-middle
+  keys: "M"
+  kind: command
+  category: movement/screen
+  description: Move to the middle line of the window.
+  aliases:
+  - go to middle of screen
+  help_tag: "M"
+  alternatives: [mo-screen-top, mo-screen-bottom]
+  effect: Cursor moves to the line in the middle of the window.
+  verified: tag
+
+- id: mo-screen-bottom
+  keys: "L"
+  kind: command
+  category: movement/screen
+  description: Move to the bottom line of the window.
+  aliases:
+  - go to bottom of screen
+  - last visible line
+  help_tag: "L"
+  alternatives: [mo-screen-top, mo-screen-middle]
+  effect: Cursor moves to the last line visible in the window.
+  verified: tag
+
+- id: scroll-half-down
+  keys: "<C-d>"
+  kind: command
+  category: movement/scroll
+  description: Scroll down half a screen.
+  aliases:
+  - scroll down
+  - page down half
+  - move down half a page
+  help_tag: "CTRL-D"
+  alternatives: [scroll-half-up, scroll-page-down]
+  effect: Window and cursor move down half a screen.
+  verified: tag
+
+- id: scroll-half-up
+  keys: "<C-u>"
+  kind: command
+  category: movement/scroll
+  description: Scroll up half a screen.
+  aliases:
+  - scroll up
+  - page up half
+  - move up half a page
+  help_tag: "CTRL-U"
+  alternatives: [scroll-half-down, scroll-page-up]
+  effect: Window and cursor move up half a screen.
+  verified: tag
+
+- id: scroll-page-down
+  keys: "<C-f>"
+  kind: command
+  category: movement/scroll
+  description: Scroll forward one full screen (page down).
+  aliases:
+  - page down
+  - next page
+  - scroll a whole screen forward
+  help_tag: "CTRL-F"
+  alternatives: [scroll-page-up, scroll-half-down]
+  effect: Window scrolls forward one screen.
+  verified: tag
+
+- id: scroll-page-up
+  keys: "<C-b>"
+  kind: command
+  category: movement/scroll
+  description: Scroll backward one full screen (page up).
+  aliases:
+  - page up
+  - previous page
+  - scroll a whole screen back
+  help_tag: "CTRL-B"
+  alternatives: [scroll-page-down, scroll-half-up]
+  effect: Window scrolls back one screen.
+  verified: tag
+
+- id: scroll-line-down
+  keys: "<C-e>"
+  kind: command
+  category: movement/scroll
+  description: Scroll the window down one line without moving the cursor line.
+  aliases:
+  - scroll one line down
+  - scroll window without moving cursor
+  help_tag: "CTRL-E"
+  alternatives: [scroll-line-up]
+  effect: Text scrolls up by one line; the cursor stays on its line if visible.
+  verified: tag
+
+- id: scroll-line-up
+  keys: "<C-y>"
+  kind: command
+  category: movement/scroll
+  description: Scroll the window up one line without moving the cursor line.
+  aliases:
+  - scroll one line up
+  help_tag: "CTRL-Y"
+  alternatives: [scroll-line-down]
+  effect: Text scrolls down by one line; the cursor stays on its line if visible.
+  verified: tag
+
+- id: scroll-cursor-center
+  keys: "zz"
+  kind: command
+  category: movement/scroll
+  description: Redraw with the cursor line in the middle of the window.
+  aliases:
+  - center the screen on the cursor
+  - scroll so current line is in the middle
+  - center current line
+  help_tag: "zz"
+  alternatives: [scroll-cursor-top, scroll-cursor-bottom]
+  effect: Window scrolls so the cursor line is centred.
+  verified: tag
+
+- id: scroll-cursor-top
+  keys: "zt"
+  kind: command
+  category: movement/scroll
+  description: Redraw with the cursor line at the top of the window.
+  aliases:
+  - scroll current line to top of screen
+  - put cursor line at top
+  help_tag: "zt"
+  alternatives: [scroll-cursor-center, scroll-cursor-bottom]
+  effect: Window scrolls so the cursor line is the first visible line.
+  verified: tag
+
+- id: scroll-cursor-bottom
+  keys: "zb"
+  kind: command
+  category: movement/scroll
+  description: Redraw with the cursor line at the bottom of the window.
+  aliases:
+  - scroll current line to bottom of screen
+  - put cursor line at bottom
+  help_tag: "zb"
+  alternatives: [scroll-cursor-center, scroll-cursor-top]
+  effect: Window scrolls so the cursor line is the last visible line.
+  verified: tag
+
+- id: mo-column
+  keys: "{count}|"
+  kind: command
+  category: movement/line
+  description: Go to column {count} of the current line.
+  aliases:
+  - go to column number
+  - jump to a specific column
+  - move cursor to column 10
+  help_tag: "bar"
+  alternatives: [mo-line-start]
+  example:
+    keys: "4|"
+    before: "┃abcdef"
+    after: "abc┃def"
+  verified: example
+
+- id: mo-jump-back
+  keys: "``"
+  kind: command
+  category: movement/jumps
+  description: Jump back to the position before the latest jump.
+  aliases:
+  - go back to where i was
+  - return to previous position
+  - jump back after G or search
+  - undo cursor jump
+  help_tag: "``"
+  alternatives: [mo-jump-older, mo-last-change]
+  setup_keys: "G"
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\ntw┃o\nthree"
+  verified: example
+
+- id: mo-jump-older
+  keys: "<C-o>"
+  kind: command
+  category: movement/jumps
+  description: Go to the older position in the jump list.
+  aliases:
+  - go back in jump list
+  - jump to previous location
+  - go back to the previous file position
+  help_tag: "CTRL-O"
+  alternatives: [mo-jump-newer, mo-jump-back]
+  setup_keys: "G"
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\ntw┃o\nthree"
+  verified: example
+
+- id: mo-jump-newer
+  keys: "<C-i>"
+  kind: command
+  category: movement/jumps
+  description: Go to the newer position in the jump list (opposite of CTRL-O).
+  aliases:
+  - go forward in jump list
+  - redo jump
+  - tab key jumps forward
+  help_tag: "CTRL-I"
+  alternatives: [mo-jump-older]
+  setup_keys: "G<C-o>"
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\ntwo\nth┃ree"
+  verified: example
+
+- id: mo-last-change
+  keys: "`."
+  kind: command
+  category: movement/jumps
+  description: Jump to the position of the last change.
+  aliases:
+  - go to where i last edited
+  - jump to last modification
+  - position of last change
+  help_tag: "`."
+  alternatives: [mo-change-older, insert-at-last-insert]
+  setup_keys: "x"
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\nt┃w\nthree"
+  verified: example
+
+- id: mo-change-older
+  keys: "g;"
+  kind: command
+  category: movement/jumps
+  description: Go to the older position in the change list.
+  aliases:
+  - go back through recent changes
+  - previous change location
+  help_tag: "g;"
+  alternatives: [mo-change-newer, mo-last-change]
+  setup_keys: "xgg"
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\nt┃w\nthree"
+  verified: example
+
+- id: mo-change-newer
+  keys: "g,"
+  kind: command
+  category: movement/jumps
+  description: Go to the newer position in the change list.
+  aliases:
+  - go forward through recent changes
+  - next change location
+  help_tag: "g,"
+  alternatives: [mo-change-older]
+  effect: Cursor moves to the next (newer) position in the change list.
+  verified: tag
+
+- id: insert-at-last-insert
+  keys: "gi"
+  kind: command
+  category: movement/jumps
+  description: Insert where insert mode was last stopped.
+  aliases:
+  - resume inserting where i left off
+  - go back to last insert position and insert
+  - continue editing where i stopped typing
+  help_tag: "gi"
+  alternatives: [mo-last-change]
+  setup_keys: "ihi<Esc>G"
+  example:
+    before: "┃one\ntwo"
+    after: "hi┃one\ntwo"
+  verified: example
+
+- id: mo-percent-file
+  keys: "{count}%"
+  kind: command
+  category: movement/file
+  description: Go to {count} percent of the file.
+  aliases:
+  - go to the middle of the file
+  - jump to 50 percent of file
+  help_tag: "N%"
+  alternatives: [mo-goto-line]
+  example:
+    keys: "50%"
+    before: "┃one\ntwo\nthree\nfour"
+    after: "one\n┃two\nthree\nfour"
+  verified: example

@@ -1,0 +1,253 @@
+# Registers and the clipboard.
+
+- id: yank-to-register
+  keys: "\"{register}y{motion}"
+  kind: command
+  category: registers
+  description: Yank into a named register (a-z) instead of the default one.
+  aliases:
+  - copy into a named register
+  - yank to register a
+  - store text in a register
+  help_tag: "quote"
+  alternatives: [paste-from-register, yank-line-to-register, show-registers]
+  example:
+    keys: "\"ayy\"ap"
+    before: "on┃e\ntwo"
+    after: "one\n┃one\ntwo"
+  verified: example
+
+- id: yank-line-to-register
+  keys: "\"{register}yy"
+  kind: command
+  category: registers
+  description: Yank the current line into a named register.
+  aliases:
+  - copy line into register
+  - save line to register b
+  help_tag: "quote"
+  alternatives: [yank-to-register, paste-from-register]
+  example:
+    keys: "\"byyG\"bp"
+    before: "on┃e\ntwo"
+    after: "one\ntwo\n┃one"
+  verified: example
+
+- id: paste-from-register
+  keys: "\"{register}p"
+  kind: command
+  category: registers
+  description: Put (paste) the contents of a register after the cursor.
+  aliases:
+  - paste from a named register
+  - put register contents
+  - paste register a
+  help_tag: "quote"
+  alternatives: [yank-to-register, paste-yank-register, paste-after]
+  example:
+    keys: "\"ayiwj\"ap"
+    before: "on┃e two\nx"
+    after: "one two\nxon┃e"
+  verified: example
+
+- id: paste-yank-register
+  keys: "\"0p"
+  kind: command
+  category: registers
+  description: Paste the last yanked text, ignoring later deletes (yank register 0).
+  aliases:
+  - paste what i copied not what i deleted
+  - paste the yank register
+  - paste last yank after a delete
+  - deleted text overwrote my paste
+  help_tag: "quote0"
+  alternatives: [paste-after, paste-from-register]
+  setup_keys: "yiwwdiwh"
+  example:
+    before: "on┃e two three"
+    after: "one on┃e three"
+  verified: example
+
+- id: delete-blackhole
+  keys: "\"_d{motion}"
+  kind: command
+  category: registers
+  description: Delete without affecting any register (black hole register).
+  aliases:
+  - delete without copying
+  - delete but keep clipboard
+  - delete without overwriting the register
+  - black hole register
+  help_tag: "quote_"
+  alternatives: [paste-yank-register, delete-line]
+  example:
+    keys: "yiww\"_diwP"
+    before: "on┃e two three"
+    after: "one on┃e three"
+  verified: example
+
+- id: delete-line-blackhole
+  keys: "\"_dd"
+  kind: command
+  category: registers
+  description: Delete the line without affecting any register.
+  aliases:
+  - delete line without copying it
+  - remove line but keep what i yanked
+  help_tag: "quote_"
+  alternatives: [delete-blackhole, delete-line]
+  example:
+    keys: "yyj\"_ddP"
+    before: "on┃e\ntwo\nthree"
+    after: "one\n┃one\nthree"
+  verified: example
+
+- id: clipboard-yank
+  keys: "\"+y{motion}"
+  kind: command
+  category: registers/clipboard
+  description: Yank into the system clipboard (needs +clipboard; on macOS Vim often use "*).
+  aliases:
+  - copy to system clipboard
+  - copy to clipboard
+  - yank to clipboard
+  - copy text out of vim
+  help_tag: "quoteplus"
+  alternatives: [clipboard-paste, clipboard-yank-line]
+  effect: Text is placed in the system clipboard (register +). Without clipboard support use :set clipboard=unnamedplus or an external tool.
+  verified: tag
+
+- id: clipboard-yank-line
+  keys: "\"+yy"
+  kind: command
+  category: registers/clipboard
+  description: Yank the current line into the system clipboard.
+  aliases:
+  - copy line to clipboard
+  - copy whole line to system clipboard
+  help_tag: "quoteplus"
+  alternatives: [clipboard-yank, clipboard-paste]
+  effect: The line is placed in the system clipboard (register +).
+  verified: tag
+
+- id: clipboard-paste
+  keys: "\"+p"
+  kind: command
+  category: registers/clipboard
+  description: Paste from the system clipboard.
+  aliases:
+  - paste from clipboard
+  - paste text copied outside vim
+  - insert clipboard contents
+  help_tag: "quoteplus"
+  alternatives: [clipboard-yank, paste-after, insert-register]
+  effect: Clipboard contents are put after the cursor.
+  verified: tag
+
+- id: clipboard-select-all-copy
+  keys: ":%y+"
+  kind: ex
+  mode: normal
+  category: registers/clipboard
+  description: Copy the whole buffer to the system clipboard.
+  aliases:
+  - copy entire file to clipboard
+  - select all and copy to clipboard
+  help_tag: ":y"
+  alternatives: [clipboard-yank, yank-all]
+  effect: All lines are placed in the system clipboard (register +).
+  verified: tag
+
+- id: show-registers
+  keys: ":registers"
+  kind: ex
+  mode: normal
+  category: registers
+  description: Show the contents of all registers.
+  aliases:
+  - list registers
+  - what is in my registers
+  - show clipboard history
+  - view register contents
+  help_tag: ":registers"
+  alternatives: [paste-from-register]
+  effect: Displays every register and its content.
+  verified: tag
+
+- id: paste-search-register
+  keys: "\"/p"
+  kind: command
+  category: registers
+  description: Paste the last search pattern.
+  aliases:
+  - insert last search term
+  - paste what i searched for
+  help_tag: "quote/"
+  alternatives: [paste-command-register]
+  setup_keys: "/two<CR>0"
+  example:
+    before: "┃one two"
+    after: "otw┃one two"
+  verified: example
+
+- id: paste-command-register
+  keys: "\":p"
+  kind: command
+  category: registers
+  description: Paste the last command-line command.
+  aliases:
+  - insert last ex command
+  - paste the last colon command
+  help_tag: "quote:"
+  alternatives: [paste-search-register, repeat-last-ex]
+  verified: tag
+
+  effect: The last command line is inserted after the cursor.
+- id: paste-filename-register
+  keys: "\"%p"
+  kind: command
+  category: registers
+  description: Paste the current file name.
+  aliases:
+  - insert file name into text
+  - paste the name of the current file
+  help_tag: "quote%"
+  alternatives: [show-full-path]
+  effect: The current file name is put after the cursor.
+  verified: tag
+
+- id: insert-register
+  keys: "<C-r>{register}"
+  kind: command
+  mode: insert
+  category: registers
+  description: Insert the contents of a register while in insert mode.
+  aliases:
+  - paste in insert mode
+  - insert register contents without leaving insert mode
+  - paste while typing
+  help_tag: "i_CTRL-R"
+  alternatives: [paste-after, paste-from-register]
+  setup_keys: "yiw"
+  example:
+    keys: "A <C-r>0"
+    before: "wor┃d"
+    after: "word word┃"
+  verified: example
+
+- id: append-to-register
+  keys: "\"{REGISTER}y{motion}"
+  kind: command
+  category: registers
+  description: Append to a named register by using its uppercase letter.
+  aliases:
+  - append yank to register
+  - add more text to a register
+  - accumulate yanks in one register
+  help_tag: "quote_alpha"
+  alternatives: [yank-to-register]
+  example:
+    keys: "\"ayiww\"Ayiw\"ap"
+    before: "┃one two"
+    after: "one tonetw┃owo"
+  verified: example

@@ -1,0 +1,227 @@
+# Evaluation set (design §7.3). q: question, expect: KB id (null = must be
+# "not found"), expect_keys: for compositions, tags: for slicing metrics.
+# Paraphrases, typos and out-of-scope questions are included on purpose.
+
+# --- text objects / delete / change -----------------------------------------
+- {q: "delete everything inside the parentheses", expect: delete-inside-parens, tags: [textobject]}
+- {q: "remove the arguments of a function call", expect: delete-inside-parens, tags: [textobject, paraphrase]}
+- {q: "clear the contents of the brackets", expect: delete-inside-parens, tags: [textobject, paraphrase]}
+- {q: "delete the parentheses and what is inside them", expect: delete-around-parens, tags: [textobject]}
+- {q: "delete the text inside the quotes", expect: delete-inside-quotes, tags: [textobject]}
+- {q: "replace the string contents", expect: change-inside-quotes, tags: [textobject]}
+- {q: "change what is inside the curly braces", expect: change-inside-braces, tags: [textobject]}
+- {q: "delete everything inside curly braces", expect: delete-inside-braces, tags: [textobject]}
+- {q: "delete the content of an html tag", expect: delete-inside-tag, tags: [textobject]}
+- {q: "delete a word", expect: delete-word, tags: [delete]}
+- {q: "delete the word under the cursor", expect: delete-inner-word, tags: [delete]}
+- {q: "delete word and its space", expect: delete-a-word, tags: [delete]}
+- {q: "delete a line", expect: delete-line, tags: [delete]}
+- {q: "delete the whole line", expect: delete-line, tags: [delete, paraphrase]}
+- {q: "delete the next 3 lines", expect: delete-lines-count, tags: [delete, count]}
+- {q: "delete to end of line", expect: delete-to-eol, tags: [delete]}
+- {q: "delete everything after the cursor on this line", expect: delete-to-eol, tags: [delete, paraphrase]}
+- {q: "delete everything before the cursor on this line", expect: delete-to-line-start, tags: [delete]}
+- {q: "delete everything", expect: delete-all, tags: [delete]}
+- {q: "delete everything below", expect: delete-to-end-of-file, tags: [delete]}
+- {q: "delete a paragraph", expect: delete-paragraph, tags: [delete]}
+- {q: "replace the word under the cursor", expect: change-inner-word, tags: [change]}
+- {q: "change a word", expect: change-word, tags: [change]}
+- {q: "replace the whole line", expect: change-line, tags: [change]}
+- {q: "change to end of line", expect: change-to-eol, tags: [change]}
+- {q: "replace a single character", expect: replace-char, tags: [change]}
+- {q: "overwrite mode", expect: replace-mode, tags: [change]}
+- {q: "delete a character", expect: delete-char, tags: [delete]}
+- {q: "delete character to the left", expect: delete-char-before, tags: [delete]}
+- {q: "delet a charcter", expect: delete-char, tags: [delete, typo]}
+
+# --- lines ---------------------------------------------------------------
+- {q: "join lines", expect: join-lines, tags: [lines]}
+- {q: "merge two lines", expect: join-lines, tags: [lines, paraphrase]}
+- {q: "join lines without space", expect: join-lines-nospace, tags: [lines]}
+- {q: "join the next 3 lines", expect: join-lines-count, tags: [lines, count]}
+- {q: "duplicate line", expect: duplicate-line, tags: [lines]}
+- {q: "copy the current line", expect: yank-line, tags: [yank]}
+- {q: "copy a line", expect: yank-line, tags: [yank]}
+- {q: "move line down", expect: move-line-down-ex, tags: [lines]}
+- {q: "move line up", expect: move-line-up-ex, tags: [lines]}
+- {q: "swap two lines", expect: swap-lines, tags: [lines]}
+- {q: "swap two characters", expect: swap-chars, tags: [chars]}
+- {q: "swap two words", expect: swap-words, tags: [words]}
+- {q: "sort lines", expect: sort-lines, tags: [lines]}
+- {q: "remove duplicate lines", expect: sort-unique, tags: [lines]}
+- {q: "reverse lines", expect: reverse-lines, tags: [lines]}
+- {q: "delete empty lines", expect: delete-blank-lines, tags: [lines]}
+- {q: "delete all lines containing a word", expect: delete-matching-lines, tags: [lines]}
+- {q: "keep only lines containing a word", expect: delete-nonmatching-lines, tags: [lines]}
+- {q: "strip trailing whitespace", expect: trailing-whitespace, tags: [whitespace]}
+- {q: "convert tabs to spaces", expect: retab, tags: [whitespace]}
+- {q: "new line below", expect: open-below, tags: [insert]}
+- {q: "insert a line before this one", expect: open-above, tags: [insert]}
+
+# --- indent / case / numbers ----------------------------------------------
+- {q: "indent line", expect: indent-line, tags: [indent]}
+- {q: "indent selected lines", expect: visual-indent, tags: [indent, visual]}
+- {q: "fix indentation of the whole file", expect: autoindent-file, tags: [indent]}
+- {q: "unindent line", expect: dedent-line, tags: [indent]}
+- {q: "uppercase a word", expect: uppercase-word, tags: [case]}
+- {q: "uppercase the line", expect: uppercase-line, tags: [case]}
+- {q: "toggle case of a letter", expect: toggle-case-char, tags: [case]}
+- {q: "capitalize first letter of word", expect: capitalize-word, tags: [case]}
+- {q: "increment number", expect: increment-number, tags: [numbers]}
+- {q: "increase the number under the cursor", expect: increment-number, tags: [numbers, paraphrase]}
+- {q: "decrement number", expect: decrement-number, tags: [numbers]}
+
+# --- undo / repeat / paste / registers --------------------------------------
+- {q: "undo", expect: undo, tags: [undo]}
+- {q: "redo", expect: redo, tags: [undo]}
+- {q: "repeat last command", expect: repeat-change, tags: [repeat]}
+- {q: "paste", expect: paste-after, tags: [paste]}
+- {q: "paste before cursor", expect: paste-before, tags: [paste]}
+- {q: "paste what i copied not what i deleted", expect: paste-yank-register, tags: [registers]}
+- {q: "delete without copying", expect: delete-blackhole, tags: [registers]}
+- {q: "copy to system clipboard", expect: clipboard-yank, tags: [registers]}
+- {q: "paste from clipboard", expect: clipboard-paste, tags: [registers]}
+- {q: "list registers", expect: show-registers, tags: [registers]}
+- {q: "yank to register a", expect: yank-to-register, tags: [registers]}
+- {q: "paste in insert mode", expect: insert-register, tags: [registers, insert]}
+- {q: "copy the whole file", expect: yank-all, tags: [yank]}
+- {q: "copy a word", expect: yank-word, tags: [yank]}
+
+# --- search / substitute ---------------------------------------------------
+- {q: "find and replace in whole file", expect: substitute-all, tags: [substitute]}
+- {q: "replace all occurrences", expect: substitute-all, tags: [substitute, paraphrase]}
+- {q: "search and replace everywhere", expect: substitute-all, tags: [substitute, paraphrase]}
+- {q: "find and replace with confirmation", expect: substitute-all-confirm, tags: [substitute]}
+- {q: "replace whole word only", expect: substitute-word, tags: [substitute]}
+- {q: "replace text on this line", expect: substitute-line, tags: [substitute]}
+- {q: "case insensitive replace", expect: substitute-case-insensitive, tags: [substitute]}
+- {q: "search for text", expect: search-forward, tags: [search]}
+- {q: "search backwards", expect: search-backward, tags: [search]}
+- {q: "next search result", expect: search-next, tags: [search]}
+- {q: "previous search result", expect: search-prev, tags: [search]}
+- {q: "search for the word under the cursor", expect: search-word-under-cursor, tags: [search]}
+- {q: "clear search highlighting", expect: search-nohighlight, tags: [search]}
+- {q: "remove the yellow highlights", expect: search-nohighlight, tags: [search, paraphrase]}
+- {q: "case insensitive search", expect: search-ignorecase, tags: [search]}
+- {q: "count occurrences of a word", expect: search-count-matches, tags: [search]}
+- {q: "repeat last substitute", expect: repeat-substitute, tags: [substitute]}
+
+# --- motions ---------------------------------------------------------------
+- {q: "go to end of line", expect: mo-line-end, tags: [motion]}
+- {q: "go to beginning of line", expect: mo-line-start, tags: [motion]}
+- {q: "first non blank character", expect: mo-first-nonblank, tags: [motion]}
+- {q: "go to top of file", expect: mo-file-start, tags: [motion]}
+- {q: "jump to end of file", expect: mo-file-end, tags: [motion]}
+- {q: "go to line number", expect: mo-goto-line, tags: [motion]}
+- {q: "jump to line 42", expect: mo-goto-line, tags: [motion, paraphrase]}
+- {q: "next word", expect: mo-word-forward, tags: [motion]}
+- {q: "previous word", expect: mo-word-backward, tags: [motion]}
+- {q: "end of word", expect: mo-word-end, tags: [motion]}
+- {q: "jump to matching brace", expect: mo-matching-bracket, tags: [motion]}
+- {q: "next paragraph", expect: mo-paragraph-forward, tags: [motion]}
+- {q: "jump to character on line", expect: mo-find-char, tags: [motion]}
+- {q: "move until character", expect: mo-till-char, tags: [motion]}
+- {q: "repeat last f", expect: mo-repeat-find, tags: [motion]}
+- {q: "go back to where i was", expect: mo-jump-back, tags: [motion]}
+- {q: "go back in jump list", expect: mo-jump-older, tags: [motion]}
+- {q: "jump to last modification", expect: mo-last-change, tags: [motion]}
+- {q: "center the screen on the cursor", expect: scroll-cursor-center, tags: [scroll]}
+- {q: "scroll down half a page", expect: scroll-half-down, tags: [scroll]}
+- {q: "page up", expect: scroll-page-up, tags: [scroll]}
+- {q: "go to column number", expect: mo-column, tags: [motion]}
+
+# --- visual ----------------------------------------------------------------
+- {q: "select text", expect: visual-char, tags: [visual]}
+- {q: "select whole lines", expect: visual-line, tags: [visual]}
+- {q: "select a column", expect: visual-block, tags: [visual]}
+- {q: "select all", expect: visual-all, tags: [visual]}
+- {q: "reselect last selection", expect: visual-reselect, tags: [visual]}
+- {q: "paste over selection", expect: visual-paste, tags: [visual]}
+- {q: "comment out multiple lines", expect: block-comment, tags: [visual, block]}
+- {q: "add a semicolon to the end of multiple lines", expect: block-append, tags: [visual, block]}
+- {q: "uppercase selection", expect: visual-uppercase, tags: [visual]}
+- {q: "find and replace in selection", expect: visual-substitute, tags: [visual, substitute]}
+- {q: "sort selected lines", expect: visual-sort, tags: [visual]}
+
+# --- insert mode -----------------------------------------------------------
+- {q: "exit insert mode", expect: insert-exit, tags: [insert]}
+- {q: "delete previous word while typing", expect: insert-delete-word, tags: [insert]}
+- {q: "autocomplete a word", expect: insert-complete-next, tags: [insert]}
+- {q: "type accented characters", expect: insert-digraph, tags: [insert]}
+- {q: "insert a literal tab", expect: insert-literal, tags: [insert]}
+- {q: "execute a normal command while in insert mode", expect: insert-normal-command, tags: [insert]}
+- {q: "insert at end of line", expect: append-eol, tags: [insert]}
+- {q: "insert at beginning of line", expect: insert-line-start, tags: [insert]}
+- {q: "delete a word", mode: insert, expect: delete-word, tags: [mode-context]}
+
+# --- macros / marks --------------------------------------------------------
+- {q: "record a macro", expect: macro-record, tags: [macros]}
+- {q: "run a macro", expect: macro-replay, tags: [macros]}
+- {q: "run macro on every line", expect: macro-replay-lines, tags: [macros]}
+- {q: "repeat last macro", expect: macro-repeat, tags: [macros]}
+- {q: "execute the macro 10 times", expect: macro-replay-count, tags: [macros, count]}
+- {q: "set a mark", expect: mark-set, tags: [marks]}
+- {q: "jump to mark", expect: mark-jump, tags: [marks]}
+- {q: "show marks", expect: marks-list, tags: [marks]}
+
+# --- windows / buffers / tabs ----------------------------------------------
+- {q: "split window", expect: window-split, tags: [windows]}
+- {q: "vertical split", expect: window-vsplit, tags: [windows]}
+- {q: "switch window", expect: window-next, tags: [windows]}
+- {q: "move between splits", expect: window-next, tags: [windows, paraphrase]}
+- {q: "close all other splits", expect: window-only, tags: [windows]}
+- {q: "make splits the same size", expect: window-equalize, tags: [windows]}
+- {q: "swap the two windows", expect: window-rotate, tags: [windows]}
+- {q: "list buffers", expect: buffer-list, tags: [buffers]}
+- {q: "next buffer", expect: buffer-next, tags: [buffers]}
+- {q: "toggle between two files", expect: buffer-alternate, tags: [buffers]}
+- {q: "close buffer", expect: buffer-delete, tags: [buffers]}
+- {q: "new tab", expect: tab-new, tags: [tabs]}
+- {q: "next tab", expect: tab-next, tags: [tabs]}
+- {q: "open a terminal", expect: terminal-open, tags: [terminal]}
+
+# --- folding ---------------------------------------------------------------
+- {q: "create a fold", expect: fold-create, tags: [folding]}
+- {q: "open fold", expect: fold-open, tags: [folding]}
+- {q: "close all folds", expect: fold-close-all, tags: [folding]}
+- {q: "open all folds", expect: fold-open-all, tags: [folding]}
+- {q: "fold by indentation", expect: fold-indent, tags: [folding]}
+
+# --- files -----------------------------------------------------------------
+- {q: "save file", expect: save, tags: [files]}
+- {q: "save and quit", expect: save-quit, tags: [files]}
+- {q: "quit without saving", expect: quit-force, tags: [files]}
+- {q: "how do i exit vim", expect: quit, tags: [files]}
+- {q: "save as", expect: save-as, tags: [files]}
+- {q: "save all files", expect: save-all, tags: [files]}
+- {q: "save a file as root", expect: save-sudo, tags: [files]}
+- {q: "open a file", expect: edit-file, tags: [files]}
+- {q: "reload the file", expect: edit-reload, tags: [files]}
+- {q: "insert command output", expect: read-command, tags: [files]}
+- {q: "run a shell command", expect: shell-command, tags: [files]}
+- {q: "format json with jq", expect: filter-lines, tags: [files]}
+- {q: "show line numbers", expect: set-line-numbers, tags: [options]}
+- {q: "relative line numbers", expect: set-relative-numbers, tags: [options]}
+- {q: "turn off line wrapping", expect: set-wrap-off, tags: [options]}
+- {q: "use spaces instead of tabs", expect: set-tabs-spaces, tags: [options]}
+- {q: "pasting messes up indentation", expect: set-paste, tags: [options]}
+- {q: "open help", expect: help-topic, tags: [help]}
+- {q: "word count", expect: filter-count-lines-wc, tags: [info]}
+- {q: "show character code", expect: char-info, tags: [info]}
+
+# --- reverse lookup --------------------------------------------------------
+- {q: "what does ciw do", expect: change-inner-word, tags: [reverse]}
+- {q: "what does `dap` do?", expect: delete-paragraph, tags: [reverse]}
+- {q: "explain gUU", expect: uppercase-line, tags: [reverse]}
+- {q: "what is :%s/foo/bar/g", expect: substitute-all, tags: [reverse]}
+- {q: "di(", expect: delete-inside-parens, tags: [reverse]}
+- {q: "what does <C-r> do", expect: redo, tags: [reverse]}
+- {q: "\"xp\"", expect: swap-chars, tags: [reverse]}
+
+# --- out of scope: must be "not found" -------------------------------------
+- {q: "how do i install the telescope plugin", expect: null, tags: [oos]}
+- {q: "configure lsp for rust", expect: null, tags: [oos]}
+- {q: "what is the weather today", expect: null, tags: [oos]}
+- {q: "compile my c program with gcc", expect: null, tags: [oos]}
+- {q: "set up fugitive git blame", expect: null, tags: [oos]}
+- {q: "asdf qwerty zxcv", expect: null, tags: [oos]}

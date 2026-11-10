@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vimask"
+version = "0.1.0"
+description = "Offline terminal companion that answers 'how do I do X in Vim?' with verified keystrokes."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "pyyaml>=6.0",
+    "ruamel.yaml>=0.18",
+    "pydantic>=2.0",
+    "rich>=13.0",
+    "prompt_toolkit>=3.0",
+    "rank_bm25>=0.2",
+    "numpy>=1.24",
+    "ollama>=0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+vimask = "vimask.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vimask = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,438 @@
+# Text objects: used after an operator or in visual mode. Composable.
+
+- id: to-inner-word
+  keys: "iw"
+  kind: textobject
+  category: editing/text-objects
+  description: Inner word (the word under the cursor, no surrounding space).
+  noun: the word under the cursor
+  aliases:
+  - the current word
+  - word under cursor text object
+  - select a word
+  help_tag: "iw"
+  alternatives: [to-a-word, to-inner-bigword]
+  example:
+    keys: "diw"
+    before: "one tw┃o three"
+    after: "one ┃ three"
+  sample: "one tw┃o three four"
+  verified: example
+
+- id: to-a-word
+  keys: "aw"
+  kind: textobject
+  category: editing/text-objects
+  description: A word including the trailing white space.
+  noun: the word under the cursor with its space
+  aliases:
+  - word with surrounding whitespace
+  - a word including space
+  help_tag: "aw"
+  alternatives: [to-inner-word]
+  example:
+    keys: "daw"
+    before: "one tw┃o three"
+    after: "one ┃three"
+  sample: "one tw┃o three four"
+  verified: example
+
+- id: to-inner-bigword
+  keys: "iW"
+  kind: textobject
+  category: editing/text-objects
+  description: Inner WORD (whitespace-separated, punctuation included).
+  noun: the WORD under the cursor
+  aliases:
+  - word including punctuation
+  - whitespace separated word under cursor
+  help_tag: "iW"
+  alternatives: [to-inner-word, to-a-bigword]
+  example:
+    keys: "diW"
+    before: "x foo.b┃ar y"
+    after: "x ┃ y"
+  sample: "x foo.b┃ar y"
+  verified: example
+
+- id: to-a-bigword
+  keys: "aW"
+  kind: textobject
+  category: editing/text-objects
+  description: A WORD (whitespace-separated) including trailing white space.
+  noun: the WORD under the cursor with its space
+  aliases:
+  - whitespace separated word with its space
+  help_tag: "aW"
+  alternatives: [to-inner-bigword]
+  example:
+    keys: "daW"
+    before: "x foo.b┃ar y"
+    after: "x ┃y"
+  sample: "x foo.b┃ar y"
+  verified: example
+
+- id: to-inner-sentence
+  keys: "is"
+  kind: textobject
+  category: editing/text-objects
+  description: Inner sentence.
+  noun: the sentence
+  aliases:
+  - current sentence
+  - sentence text object
+  help_tag: "is"
+  alternatives: [to-a-sentence]
+  example:
+    keys: "dis"
+    before: "One two. Three fo┃ur. Five."
+    after: "One two. ┃ Five."
+  sample: "One two. Three fo┃ur. Five six."
+  verified: example
+
+- id: to-a-sentence
+  keys: "as"
+  kind: textobject
+  category: editing/text-objects
+  description: A sentence including trailing white space.
+  noun: the sentence with its space
+  aliases:
+  - sentence with trailing space
+  help_tag: "as"
+  alternatives: [to-inner-sentence]
+  example:
+    keys: "das"
+    before: "One two. Three fo┃ur. Five."
+    after: "One two. ┃Five."
+  sample: "One two. Three fo┃ur. Five six."
+  verified: example
+
+- id: to-inner-paragraph
+  keys: "ip"
+  kind: textobject
+  category: editing/text-objects
+  description: Inner paragraph (lines up to the surrounding blank lines).
+  noun: the paragraph
+  aliases:
+  - current paragraph
+  - block of text between blank lines
+  - paragraph text object
+  help_tag: "ip"
+  alternatives: [to-a-paragraph]
+  example:
+    keys: "dip"
+    before: "a\n\nb\nc┃\nd\n\ne"
+    after: "a\n\n┃\ne"
+  sample: "a\n\nb\nc┃\nd\n\ne"
+  verified: example
+
+- id: to-a-paragraph
+  keys: "ap"
+  kind: textobject
+  category: editing/text-objects
+  description: A paragraph including the following blank line.
+  noun: the paragraph with its blank line
+  aliases:
+  - paragraph with trailing blank line
+  help_tag: "ap"
+  alternatives: [to-inner-paragraph]
+  example:
+    keys: "dap"
+    before: "a\n\nb\nc┃\nd\n\ne"
+    after: "a\n\n┃e"
+  sample: "a\n\nb\nc┃\nd\n\ne"
+  verified: example
+
+- id: to-inner-paren
+  keys: "i("
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest enclosing ( ).
+  noun: inside the parentheses
+  aliases:
+  - inside parentheses
+  - contents of the brackets
+  - inner parens
+  - between round brackets
+  - arguments of a function call
+  help_tag: "i("
+  alternatives: [to-a-paren, to-inner-bracket, to-inner-brace]
+  example:
+    keys: "di("
+    before: "print(foo, ba┃r)"
+    after: "print(┃)"
+  sample: "print(foo, ba┃r) + g(x)"
+  verified: example
+
+- id: to-a-paren
+  keys: "a("
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest enclosing ( ) including the parentheses.
+  noun: the parentheses and their contents
+  aliases:
+  - around parentheses
+  - parens including the brackets themselves
+  - a paren block
+  help_tag: "a("
+  alternatives: [to-inner-paren]
+  example:
+    keys: "da("
+    before: "print(foo, ba┃r)"
+    after: "prin┃t"
+  sample: "x = f(foo, ba┃r) + g(x)"
+  verified: example
+
+- id: to-inner-bracket
+  keys: "i["
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest enclosing [ ].
+  noun: inside the square brackets
+  aliases:
+  - inside square brackets
+  - contents of a list literal
+  - inner square brackets
+  help_tag: "i["
+  alternatives: [to-a-bracket, to-inner-paren]
+  example:
+    keys: "di["
+    before: "xs[1, ┃2, 3]"
+    after: "xs[┃]"
+  sample: "xs[1, ┃2, 3] + ys[0]"
+  verified: example
+
+- id: to-a-bracket
+  keys: "a["
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest enclosing [ ] including the brackets.
+  noun: the square brackets and their contents
+  aliases:
+  - around square brackets
+  help_tag: "a["
+  alternatives: [to-inner-bracket]
+  example:
+    keys: "da["
+    before: "xs[1, ┃2, 3]"
+    after: "x┃s"
+  sample: "xs[1, ┃2, 3] + ys[0]"
+  verified: example
+
+- id: to-inner-brace
+  keys: "i{"
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest enclosing { }.
+  noun: inside the curly braces
+  aliases:
+  - inside curly braces
+  - contents of a block
+  - inner braces
+  - body of the function
+  help_tag: "i{"
+  alternatives: [to-a-brace, to-inner-paren]
+  example:
+    keys: "di{"
+    before: "f() { ret┃urn 1; }"
+    after: "f() {┃}"
+  sample: "f() { ret┃urn 1; } g() { }"
+  verified: example
+
+- id: to-a-brace
+  keys: "a{"
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest enclosing { } including the braces.
+  noun: the curly braces and their contents
+  aliases:
+  - around curly braces
+  - whole block including braces
+  help_tag: "a{"
+  alternatives: [to-inner-brace]
+  example:
+    keys: "da{"
+    before: "f() { ret┃urn 1; }"
+    after: "f()┃ "
+  sample: "f() { ret┃urn 1; } g() { }"
+  verified: example
+
+- id: to-inner-angle
+  keys: "i<"
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest enclosing < >.
+  noun: inside the angle brackets
+  aliases:
+  - inside angle brackets
+  - contents of generic type parameters
+  help_tag: "i<"
+  alternatives: [to-a-angle]
+  example:
+    keys: "di<"
+    before: "List<Str┃ing> x"
+    after: "List<┃> x"
+  sample: "List<Str┃ing> x"
+  verified: example
+
+- id: to-a-angle
+  keys: "a<"
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest enclosing < > including the angle brackets.
+  noun: the angle brackets and their contents
+  aliases:
+  - around angle brackets
+  help_tag: "a<"
+  alternatives: [to-inner-angle]
+  example:
+    keys: "da<"
+    before: "List<Str┃ing> x"
+    after: "List┃ x"
+  sample: "List<Str┃ing> x"
+  verified: example
+
+- id: to-inner-double-quote
+  keys: "i\""
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest double-quoted string.
+  noun: inside the double quotes
+  aliases:
+  - inside double quotes
+  - contents of the string
+  - text between quotes
+  - inner quotes
+  help_tag: iquote
+  alternatives: [to-a-double-quote, to-inner-single-quote]
+  example:
+    keys: "di\""
+    before: "say(\"hel┃lo\")"
+    after: "say(\"┃\")"
+  sample: "say(\"hel┃lo world\") + \"x\""
+  verified: example
+
+- id: to-a-double-quote
+  keys: "a\""
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest double-quoted string including the quotes.
+  noun: the double-quoted string with its quotes
+  aliases:
+  - around double quotes
+  - string including the quotes
+  help_tag: aquote
+  alternatives: [to-inner-double-quote]
+  example:
+    keys: "da\""
+    before: "say(\"hel┃lo\")"
+    after: "say(┃)"
+  sample: "x = \"hel┃lo world\" + y"
+  verified: example
+
+- id: to-inner-single-quote
+  keys: "i'"
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest single-quoted string.
+  noun: inside the single quotes
+  aliases:
+  - inside single quotes
+  - text between single quotes
+  help_tag: "i'"
+  alternatives: [to-a-single-quote, to-inner-double-quote]
+  example:
+    keys: "di'"
+    before: "say('hel┃lo')"
+    after: "say('┃')"
+  sample: "say('hel┃lo world') + 'x'"
+  verified: example
+
+- id: to-a-single-quote
+  keys: "a'"
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest single-quoted string including the quotes.
+  noun: the single-quoted string with its quotes
+  aliases:
+  - around single quotes
+  help_tag: "a'"
+  alternatives: [to-inner-single-quote]
+  example:
+    keys: "da'"
+    before: "say('hel┃lo')"
+    after: "say(┃)"
+  sample: "x = 'hel┃lo world' + y"
+  verified: example
+
+- id: to-inner-backtick
+  keys: "i`"
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest backtick-quoted string.
+  noun: inside the backticks
+  aliases:
+  - inside backticks
+  - template string contents
+  help_tag: "i`"
+  alternatives: [to-a-backtick]
+  example:
+    keys: "di`"
+    before: "x = `hel┃lo`"
+    after: "x = `┃`"
+  sample: "x = `hel┃lo world`"
+  verified: example
+
+- id: to-a-backtick
+  keys: "a`"
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest backtick-quoted string including the backticks.
+  noun: the backtick string with its backticks
+  aliases:
+  - around backticks
+  help_tag: "a`"
+  alternatives: [to-inner-backtick]
+  example:
+    keys: "da`"
+    before: "x = `hel┃lo`"
+    after: "x ┃="
+  sample: "x = `hel┃lo world`"
+  verified: example
+
+- id: to-inner-tag
+  keys: "it"
+  kind: textobject
+  category: editing/text-objects
+  description: Inside the nearest enclosing XML/HTML tag pair.
+  noun: inside the tag
+  aliases:
+  - inside html tag
+  - contents of an xml element
+  - text between tags
+  help_tag: "it"
+  alternatives: [to-a-tag]
+  example:
+    keys: "dit"
+    before: "<b>bo┃ld</b>"
+    after: "<b>┃</b>"
+  sample: "<p>Hello <b>bo┃ld</b> text</p>"
+  verified: example
+
+- id: to-a-tag
+  keys: "at"
+  kind: textobject
+  category: editing/text-objects
+  description: The nearest enclosing XML/HTML tag pair including the tags.
+  noun: the tag with its contents
+  aliases:
+  - around html tag
+  - whole xml element including tags
+  help_tag: "at"
+  alternatives: [to-inner-tag]
+  example:
+    keys: "dat"
+    before: "<p><b>bo┃ld</b></p>"
+    after: "<p>┃</p>"
+  sample: "<p>Hello <b>bo┃ld</b> text</p>"
+  verified: example

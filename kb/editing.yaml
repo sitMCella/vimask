@@ -1,0 +1,1529 @@
+# Normal-mode editing commands (including the most common operator+object
+# compositions as ready-made entries, because they are what people ask for).
+
+- id: delete-char
+  keys: "x"
+  kind: command
+  category: editing/delete
+  description: Delete the character under the cursor.
+  aliases:
+  - delete a character
+  - remove the character under the cursor
+  - delete letter
+  help_tag: "x"
+  alternatives: [delete-char-before, substitute-char]
+  example:
+    before: "ab┃cd"
+    after: "ab┃d"
+  verified: example
+
+- id: delete-char-before
+  keys: "X"
+  kind: command
+  category: editing/delete
+  description: Delete the character before the cursor.
+  aliases:
+  - delete character to the left
+  - backspace in normal mode
+  - remove previous character
+  help_tag: "X"
+  alternatives: [delete-char]
+  example:
+    before: "ab┃cd"
+    after: "a┃cd"
+  verified: example
+
+- id: delete-line
+  keys: "dd"
+  kind: command
+  category: editing/delete
+  description: Delete the current line.
+  aliases:
+  - delete the whole line
+  - delete a line
+  - remove the whole line
+  - cut the current line
+  - delete this line
+  help_tag: "dd"
+  alternatives: [delete-to-eol, delete-lines-count, change-line]
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "one\nth┃ree"
+  verified: example
+
+- id: delete-lines-count
+  keys: "{count}dd"
+  kind: command
+  category: editing/delete
+  description: Delete {count} lines starting at the cursor.
+  aliases:
+  - delete multiple lines
+  - delete the next 3 lines
+  - remove several lines
+  help_tag: "dd"
+  alternatives: [delete-line, delete-to-end-of-file]
+  example:
+    keys: "2dd"
+    before: "one\ntw┃o\nthree\nfour"
+    after: "one\nfo┃ur"
+  verified: example
+
+- id: delete-to-eol
+  keys: "D"
+  kind: command
+  category: editing/delete
+  description: Delete from the cursor to the end of the line.
+  aliases:
+  - delete to end of line
+  - delete rest of line
+  - remove everything after the cursor on this line
+  help_tag: "D"
+  alternatives: [change-to-eol, delete-to-line-start]
+  example:
+    before: "one ┃two three"
+    after: "one┃ "
+  verified: example
+
+- id: delete-to-line-start
+  keys: "d0"
+  kind: command
+  category: editing/delete
+  description: Delete from the cursor to the start of the line.
+  aliases:
+  - delete to beginning of line
+  - delete everything before the cursor on this line
+  - remove start of line
+  help_tag: "d"
+  alternatives: [delete-to-eol, delete-line]
+  example:
+    before: "one two ┃three"
+    after: "┃three"
+  verified: example
+
+- id: delete-word
+  keys: "dw"
+  kind: command
+  category: editing/delete
+  description: Delete from the cursor to the start of the next word.
+  aliases:
+  - delete a word
+  - delete word forward
+  - remove the next word
+  - delete to next word
+  help_tag: "d"
+  alternatives: [delete-inner-word, delete-a-word, change-word]
+  example:
+    before: "one ┃two three"
+    after: "one ┃three"
+  verified: example
+
+- id: delete-inner-word
+  keys: "diw"
+  kind: command
+  category: editing/delete
+  description: Delete the word under the cursor (cursor can be anywhere in it).
+  aliases:
+  - delete the current word
+  - delete word under cursor
+  - remove the word i am on
+  help_tag: "iw"
+  alternatives: [delete-a-word, delete-word, change-inner-word]
+  example:
+    before: "one tw┃o three"
+    after: "one ┃ three"
+  verified: example
+
+- id: delete-a-word
+  keys: "daw"
+  kind: command
+  category: editing/delete
+  description: Delete the word under the cursor together with the following space.
+  aliases:
+  - delete word and its space
+  - delete whole word including whitespace
+  - remove word cleanly
+  help_tag: "aw"
+  alternatives: [delete-inner-word, delete-word]
+  example:
+    before: "one tw┃o three"
+    after: "one ┃three"
+  verified: example
+
+- id: delete-to-end-of-file
+  keys: "dG"
+  kind: command
+  category: editing/delete
+  description: Delete from the current line to the end of the file.
+  aliases:
+  - delete everything below
+  - delete to end of file
+  - remove all following lines
+  help_tag: "G"
+  alternatives: [delete-to-start-of-file, delete-all]
+  example:
+    before: "one\ntw┃o\nthree\nfour"
+    after: "on┃e"
+  verified: example
+
+- id: delete-to-start-of-file
+  keys: "dgg"
+  kind: command
+  category: editing/delete
+  description: Delete from the current line to the start of the file.
+  aliases:
+  - delete everything above
+  - delete to top of file
+  - remove all preceding lines
+  help_tag: "gg"
+  alternatives: [delete-to-end-of-file, delete-all]
+  example:
+    before: "one\ntwo\nth┃ree\nfour"
+    after: "fo┃ur"
+  verified: example
+
+- id: delete-all
+  keys: "ggdG"
+  kind: command
+  category: editing/delete
+  description: Delete the entire buffer contents.
+  aliases:
+  - delete everything
+  - clear the whole file
+  - remove all lines
+  - empty the buffer
+  help_tag: "dd"
+  alternatives: [delete-all-ex, yank-all]
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "┃"
+  verified: example
+
+- id: delete-all-ex
+  keys: ":%d"
+  kind: ex
+  mode: normal
+  category: editing/delete
+  description: Delete all lines (ex command).
+  aliases:
+  - delete every line with an ex command
+  - clear buffer with colon command
+  help_tag: ":d"
+  alternatives: [delete-all]
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "┃"
+  verified: example
+
+- id: delete-paragraph
+  keys: "dap"
+  kind: command
+  category: editing/delete
+  description: Delete the current paragraph including its trailing blank line.
+  aliases:
+  - delete a paragraph
+  - remove the block of text i am in
+  - delete lines up to blank line
+  help_tag: "ap"
+  alternatives: [delete-inner-paragraph, to-a-paragraph]
+  example:
+    before: "a\n\nb\nc┃\nd\n\ne"
+    after: "a\n\n┃e"
+  verified: example
+
+- id: delete-inner-paragraph
+  keys: "dip"
+  kind: command
+  category: editing/delete
+  description: Delete the current paragraph, keeping the surrounding blank lines.
+  aliases:
+  - delete paragraph but keep blank line
+  help_tag: "ip"
+  alternatives: [delete-paragraph]
+  example:
+    before: "a\n\nb\nc┃\nd\n\ne"
+    after: "a\n\n┃\ne"
+  verified: example
+
+- id: delete-inside-parens
+  keys: "di("
+  kind: command
+  category: editing/delete
+  description: Delete inside the nearest enclosing ( ).
+  aliases:
+  - delete everything inside the parentheses
+  - clear the contents of the brackets
+  - remove arguments of function call
+  - delete between parens
+  help_tag: "i("
+  alternatives: [delete-around-parens, change-inside-parens, delete-inside-quotes]
+  example:
+    before: "print(foo, ba┃r)"
+    after: "print(┃)"
+  verified: example
+
+- id: delete-around-parens
+  keys: "da("
+  kind: command
+  category: editing/delete
+  description: Delete the nearest enclosing ( ) including the parentheses.
+  aliases:
+  - delete the parentheses and what is inside them
+  - delete parentheses and their contents
+  - remove the whole paren group
+  help_tag: "a("
+  alternatives: [delete-inside-parens]
+  example:
+    before: "x = (foo + ba┃r) * 2"
+    after: "x = ┃ * 2"
+  verified: example
+
+- id: delete-inside-braces
+  keys: "di{"
+  kind: command
+  category: editing/delete
+  description: Delete inside the nearest enclosing { }.
+  aliases:
+  - delete everything inside curly braces
+  - clear the body of the block
+  - empty the function body
+  help_tag: "i{"
+  alternatives: [delete-inside-parens, change-inside-braces]
+  example:
+    before: "f() { ret┃urn 1; }"
+    after: "f() {┃}"
+  verified: example
+
+- id: delete-inside-brackets
+  keys: "di["
+  kind: command
+  category: editing/delete
+  description: Delete inside the nearest enclosing [ ].
+  aliases:
+  - delete everything inside square brackets
+  - clear the array literal
+  help_tag: "i["
+  alternatives: [delete-inside-parens]
+  example:
+    before: "xs = [1, ┃2, 3]"
+    after: "xs = [┃]"
+  verified: example
+
+- id: delete-inside-quotes
+  keys: "di\""
+  kind: command
+  category: editing/delete
+  description: Delete inside the nearest double-quoted string.
+  aliases:
+  - delete the text inside the quotes
+  - clear the string contents
+  - remove everything between double quotes
+  help_tag: iquote
+  alternatives: [change-inside-quotes, delete-inside-parens]
+  example:
+    before: "say(\"hel┃lo\")"
+    after: "say(\"┃\")"
+  verified: example
+
+- id: delete-inside-tag
+  keys: "dit"
+  kind: command
+  category: editing/delete
+  description: Delete inside the nearest enclosing HTML/XML tag pair.
+  aliases:
+  - delete the content of an html tag
+  - clear text between tags
+  help_tag: "it"
+  alternatives: [change-inside-tag]
+  example:
+    before: "<b>bo┃ld</b>"
+    after: "<b>┃</b>"
+  verified: example
+
+- id: change-word
+  keys: "cw"
+  kind: command
+  category: editing/change
+  description: Change from the cursor to the end of the word (deletes it and enters insert mode).
+  aliases:
+  - change a word
+  - replace word from cursor
+  - retype the rest of the word
+  help_tag: "cw"
+  alternatives: [change-inner-word, change-to-eol]
+  example:
+    keys: "cwNEW<Esc>"
+    before: "one ┃two three"
+    after: "one NE┃W three"
+  verified: example
+
+- id: change-inner-word
+  keys: "ciw"
+  kind: command
+  category: editing/change
+  description: Change the whole word under the cursor (deletes it and enters insert mode).
+  aliases:
+  - replace the word under the cursor
+  - change the current word
+  - retype a word
+  - overwrite word i am on
+  help_tag: "iw"
+  alternatives: [change-word, delete-inner-word]
+  example:
+    keys: "ciwNEW<Esc>"
+    before: "one tw┃o three"
+    after: "one NE┃W three"
+  verified: example
+
+- id: change-to-eol
+  keys: "C"
+  kind: command
+  category: editing/change
+  description: Change from the cursor to the end of the line.
+  aliases:
+  - change to end of line
+  - delete rest of line and insert
+  - replace everything after the cursor
+  help_tag: "C"
+  alternatives: [delete-to-eol, change-line]
+  example:
+    keys: "Cnew<Esc>"
+    before: "one ┃two three"
+    after: "one ne┃w"
+  verified: example
+
+- id: change-line
+  keys: "cc"
+  kind: command
+  category: editing/change
+  description: Change the whole line (deletes its text, keeps indent, enters insert mode).
+  aliases:
+  - replace the whole line
+  - clear line and start typing
+  - retype the current line
+  help_tag: "cc"
+  alternatives: [change-to-eol, delete-line, change-line-s]
+  example:
+    keys: "ccnew<Esc>"
+    before: "one\ntw┃o\nthree"
+    after: "one\nne┃w\nthree"
+  verified: example
+
+- id: change-line-s
+  keys: "S"
+  kind: command
+  category: editing/change
+  description: Same as cc, change the whole line.
+  aliases:
+  - substitute line
+  help_tag: "S"
+  alternatives: [change-line]
+  example:
+    keys: "Snew<Esc>"
+    before: "one\ntw┃o\nthree"
+    after: "one\nne┃w\nthree"
+  verified: example
+
+- id: change-inside-parens
+  keys: "ci("
+  kind: command
+  category: editing/change
+  description: Change the text inside the nearest enclosing ( ).
+  aliases:
+  - replace the arguments of a function call
+  - retype what is inside the parentheses
+  - change contents of brackets
+  help_tag: "i("
+  alternatives: [delete-inside-parens, change-inside-quotes]
+  example:
+    keys: "ci(x<Esc>"
+    before: "print(foo, ba┃r)"
+    after: "print(┃x)"
+  verified: example
+
+- id: change-inside-braces
+  keys: "ci{"
+  kind: command
+  category: editing/change
+  description: Change the text inside the nearest enclosing { }.
+  aliases:
+  - replace the body of the block
+  - retype what is inside curly braces
+  help_tag: "i{"
+  alternatives: [delete-inside-braces, change-inside-parens]
+  example:
+    keys: "ci{x<Esc>"
+    before: "f() { ret┃urn 1; }"
+    after: "f() {┃x}"
+  verified: example
+
+- id: change-inside-quotes
+  keys: "ci\""
+  kind: command
+  category: editing/change
+  description: Change the text inside the nearest double-quoted string.
+  aliases:
+  - replace the string contents
+  - retype what is inside the quotes
+  - change text in quotes
+  help_tag: iquote
+  alternatives: [delete-inside-quotes, change-inside-parens]
+  example:
+    keys: "ci\"bye<Esc>"
+    before: "say(\"hel┃lo\")"
+    after: "say(\"by┃e\")"
+  verified: example
+
+- id: change-inside-tag
+  keys: "cit"
+  kind: command
+  category: editing/change
+  description: Change the text inside the nearest enclosing HTML/XML tag pair.
+  aliases:
+  - replace the content of an html tag
+  - retype text between tags
+  help_tag: "it"
+  alternatives: [delete-inside-tag]
+  example:
+    keys: "citx<Esc>"
+    before: "<b>bo┃ld</b>"
+    after: "<b>┃x</b>"
+  verified: example
+
+- id: substitute-char
+  keys: "s"
+  kind: command
+  category: editing/change
+  description: Delete the character under the cursor and enter insert mode.
+  aliases:
+  - replace one character with several
+  - delete character and start typing
+  - substitute character
+  help_tag: "s"
+  alternatives: [replace-char, delete-char]
+  example:
+    keys: "sXY<Esc>"
+    before: "ab┃cd"
+    after: "abX┃Yd"
+  verified: example
+
+- id: replace-char
+  keys: "r{char}"
+  kind: command
+  category: editing/change
+  description: Replace the character under the cursor with {char}.
+  aliases:
+  - replace a single character
+  - change one letter
+  - overwrite character under cursor
+  help_tag: "r"
+  alternatives: [substitute-char, replace-mode]
+  example:
+    keys: "rX"
+    before: "ab┃cd"
+    after: "ab┃Xd"
+  verified: example
+
+- id: replace-mode
+  keys: "R"
+  kind: command
+  category: editing/change
+  description: Enter Replace mode, overwriting characters as you type.
+  aliases:
+  - overwrite mode
+  - overtype text
+  - replace several characters by typing over them
+  help_tag: "R"
+  alternatives: [replace-char, substitute-char]
+  example:
+    keys: "RXY<Esc>"
+    before: "ab┃cd"
+    after: "abX┃Y"
+  verified: example
+
+- id: join-lines
+  keys: "J"
+  kind: command
+  category: editing/lines
+  description: Join the current line with the next, inserting one space.
+  aliases:
+  - join lines
+  - merge two lines
+  - join the next line to this one
+  - put the next line on this line
+  help_tag: "J"
+  alternatives: [join-lines-nospace, join-lines-count]
+  example:
+    before: "on┃e\ntwo\nthree"
+    after: "one┃ two\nthree"
+  verified: example
+
+- id: join-lines-count
+  keys: "{count}J"
+  kind: command
+  category: editing/lines
+  description: Join {count} lines starting at the cursor.
+  aliases:
+  - join several lines
+  - join the next 3 lines
+  - merge multiple lines into one
+  help_tag: "J"
+  alternatives: [join-lines, visual-join]
+  example:
+    keys: "3J"
+    before: "on┃e\ntwo\nthree\nfour"
+    after: "one two┃ three\nfour"
+  verified: example
+
+- id: join-lines-nospace
+  keys: "gJ"
+  kind: command
+  category: editing/lines
+  description: Join the current line with the next without inserting a space.
+  aliases:
+  - join lines without space
+  - concatenate lines directly
+  help_tag: "gJ"
+  alternatives: [join-lines]
+  example:
+    before: "on┃e\ntwo"
+    after: "one┃two"
+  verified: example
+
+- id: undo
+  keys: "u"
+  kind: command
+  category: editing/undo
+  description: Undo the last change.
+  aliases:
+  - undo
+  - revert last change
+  - take back the last edit
+  - oops undo that
+  help_tag: "u"
+  alternatives: [redo, undo-line]
+  setup_keys: "x"
+  example:
+    before: "ab┃cd"
+    after: "ab┃cd"
+  verified: example
+
+- id: redo
+  keys: "<C-r>"
+  kind: command
+  category: editing/undo
+  description: Redo the last undone change.
+  aliases:
+  - redo
+  - undo the undo
+  - reapply change
+  help_tag: "CTRL-R"
+  alternatives: [undo]
+  setup_keys: "xu"
+  example:
+    before: "ab┃cd"
+    after: "ab┃d"
+  verified: example
+
+- id: undo-line
+  keys: "U"
+  kind: command
+  category: editing/undo
+  description: Undo all recent changes on the last changed line.
+  aliases:
+  - undo all changes on this line
+  - restore the line
+  help_tag: "U"
+  alternatives: [undo]
+  setup_keys: "xxx"
+  example:
+    before: "ab┃cdef"
+    after: "ab┃cdef"
+  verified: example
+
+- id: repeat-change
+  keys: "."
+  kind: command
+  category: editing/repeat
+  description: Repeat the last change.
+  aliases:
+  - repeat last command
+  - do that again
+  - redo the last edit on another spot
+  - dot repeat
+  help_tag: "."
+  alternatives: [macro-replay, repeat-substitute]
+  setup_keys: "dwj"
+  example:
+    before: "┃one two\nthree four"
+    after: "two\n┃four"
+  verified: example
+
+- id: paste-after
+  keys: "p"
+  kind: command
+  category: editing/paste
+  description: Put (paste) the last yanked or deleted text after the cursor.
+  aliases:
+  - paste
+  - paste after cursor
+  - put text below or after
+  - insert the copied text
+  help_tag: "p"
+  alternatives: [paste-before, paste-yank-register]
+  setup_keys: "yy"
+  example:
+    before: "on┃e\ntwo"
+    after: "one\n┃one\ntwo"
+  verified: example
+
+- id: paste-before
+  keys: "P"
+  kind: command
+  category: editing/paste
+  description: Put (paste) the last yanked or deleted text before the cursor.
+  aliases:
+  - paste before cursor
+  - put text above or before
+  help_tag: "P"
+  alternatives: [paste-after]
+  setup_keys: "yy"
+  example:
+    before: "on┃e\ntwo"
+    after: "┃one\none\ntwo"
+  verified: example
+
+- id: yank-line
+  keys: "yy"
+  kind: command
+  category: editing/yank
+  description: Yank (copy) the current line.
+  aliases:
+  - copy a line
+  - copy the current line
+  - yank line
+  help_tag: "yy"
+  alternatives: [yank-lines-count, paste-after, duplicate-line]
+  example:
+    keys: "yyp"
+    before: "on┃e\ntwo"
+    after: "one\n┃one\ntwo"
+  verified: example
+
+- id: yank-lines-count
+  keys: "{count}yy"
+  kind: command
+  category: editing/yank
+  description: Yank (copy) {count} lines.
+  aliases:
+  - copy multiple lines
+  - copy the next 3 lines
+  help_tag: "yy"
+  alternatives: [yank-line, yank-all]
+  example:
+    keys: "2yyGp"
+    before: "on┃e\ntwo\nthree"
+    after: "one\ntwo\nthree\n┃one\ntwo"
+  verified: example
+
+- id: yank-to-eol
+  keys: "y$"
+  kind: command
+  category: editing/yank
+  description: Yank (copy) from the cursor to the end of the line.
+  aliases:
+  - copy to end of line
+  - copy rest of line
+  help_tag: "y"
+  alternatives: [yank-line, yank-word]
+  example:
+    keys: "y$P"
+    before: "one ┃two"
+    after: "one tw┃otwo"
+  verified: example
+
+- id: yank-word
+  keys: "yiw"
+  kind: command
+  category: editing/yank
+  description: Yank (copy) the word under the cursor.
+  aliases:
+  - copy a word
+  - copy the current word
+  - yank word under cursor
+  help_tag: "iw"
+  alternatives: [yank-line, paste-after]
+  example:
+    keys: "yiwP"
+    before: "one tw┃o"
+    after: "one tw┃otwo"
+  verified: example
+
+- id: yank-all
+  keys: "ggyG"
+  kind: command
+  category: editing/yank
+  description: Yank (copy) the whole buffer.
+  aliases:
+  - copy the whole file
+  - copy everything
+  - select all and copy
+  - yank entire buffer
+  help_tag: "yy"
+  alternatives: [yank-all-ex, delete-all]
+  example:
+    keys: "ggyGGp"
+    before: "on┃e\ntwo"
+    after: "one\ntwo\n┃one\ntwo"
+  verified: example
+
+- id: yank-all-ex
+  keys: ":%y"
+  kind: ex
+  mode: normal
+  category: editing/yank
+  description: Yank (copy) all lines (ex command).
+  aliases:
+  - copy whole file with colon command
+  help_tag: ":y"
+  alternatives: [yank-all]
+  example:
+    keys: ":%y<CR>Gp"
+    before: "on┃e\ntwo"
+    after: "one\ntwo\n┃one\ntwo"
+  verified: example
+
+- id: duplicate-line
+  keys: "yyp"
+  kind: command
+  category: editing/lines
+  description: Duplicate the current line below.
+  aliases:
+  - duplicate line
+  - copy line below
+  - repeat the current line
+  - clone this line
+  help_tag: "p"
+  alternatives: [copy-line-ex, yank-line]
+  example:
+    before: "on┃e\ntwo"
+    after: "one\n┃one\ntwo"
+  verified: example
+
+- id: copy-line-ex
+  keys: ":t."
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Duplicate the current line below (ex command).
+  aliases:
+  - duplicate line with colon command
+  - copy line with t command
+  help_tag: ":t"
+  alternatives: [duplicate-line, move-line-down-ex]
+  example:
+    before: "on┃e\ntwo"
+    after: "one\non┃e\ntwo"
+  verified: example
+
+- id: move-line-down-ex
+  keys: ":m+1"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Move the current line down one line.
+  aliases:
+  - move line down
+  - swap line with the one below
+  - shift the current line downward
+  help_tag: ":m"
+  alternatives: [move-line-up-ex, swap-lines]
+  example:
+    before: "on┃e\ntwo\nthree"
+    after: "two\non┃e\nthree"
+  verified: example
+
+- id: move-line-up-ex
+  keys: ":m-2"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Move the current line up one line.
+  aliases:
+  - move line up
+  - swap line with the one above
+  - shift the current line upward
+  help_tag: ":m"
+  alternatives: [move-line-down-ex, swap-lines]
+  example:
+    before: "one\ntw┃o\nthree"
+    after: "tw┃o\none\nthree"
+  verified: example
+
+- id: swap-lines
+  keys: "ddp"
+  kind: command
+  category: editing/lines
+  description: Swap the current line with the next one.
+  aliases:
+  - swap two lines
+  - exchange this line with the one below
+  help_tag: "p"
+  alternatives: [move-line-down-ex, swap-chars]
+  example:
+    before: "on┃e\ntwo\nthree"
+    after: "two\n┃one\nthree"
+  verified: example
+
+- id: swap-chars
+  keys: "xp"
+  kind: command
+  category: editing/chars
+  description: Swap the character under the cursor with the next one.
+  aliases:
+  - swap two characters
+  - transpose characters
+  - fix a typo by swapping letters
+  help_tag: "p"
+  alternatives: [swap-lines, swap-words]
+  example:
+    before: "t┃ehn"
+    after: "th┃en"
+  verified: example
+
+- id: swap-words
+  keys: "dwwP"
+  kind: command
+  category: editing/words
+  description: Swap the word under the cursor with the next word (cursor at word start).
+  aliases:
+  - swap two words
+  - exchange adjacent words
+  - transpose words
+  help_tag: "p"
+  alternatives: [swap-chars]
+  example:
+    before: "┃one two three"
+    after: "two one┃ three"
+  verified: example
+
+- id: indent-line
+  keys: ">>"
+  kind: command
+  category: editing/indent
+  description: Indent the current line by one shiftwidth.
+  aliases:
+  - indent line
+  - shift line right
+  - add indentation
+  - increase indent
+  help_tag: ">>"
+  alternatives: [dedent-line, indent-lines-count, op-indent]
+  example:
+    before: "┃foo"
+    after: "┃    foo"
+  verified: example
+
+- id: indent-lines-count
+  keys: "{count}>>"
+  kind: command
+  category: editing/indent
+  description: Indent {count} lines by one shiftwidth.
+  aliases:
+  - indent multiple lines
+  - indent the next 3 lines
+  help_tag: ">>"
+  alternatives: [indent-line, visual-indent]
+  example:
+    keys: "2>>"
+    before: "┃foo\nbar\nbaz"
+    after: "┃    foo\n    bar\nbaz"
+  verified: example
+
+- id: dedent-line
+  keys: "<<"
+  kind: command
+  category: editing/indent
+  description: Unindent the current line by one shiftwidth.
+  aliases:
+  - unindent line
+  - shift line left
+  - remove indentation
+  - decrease indent
+  - outdent
+  help_tag: "<<"
+  alternatives: [indent-line, op-dedent]
+  example:
+    before: "    fo┃o"
+    after: "fo┃o"
+  verified: example
+
+- id: autoindent-line
+  keys: "=="
+  kind: command
+  category: editing/indent
+  description: Re-indent the current line using the current indent rules.
+  aliases:
+  - fix indentation of the current line
+  - auto indent this line
+  help_tag: "=="
+  alternatives: [autoindent-file, op-autoindent]
+  options: ["cindent"]
+  example:
+    before: "if (x) {\n      ┃y();\n}"
+    after: "if (x) {\n    y(┃);\n}"
+  verified: example
+
+- id: autoindent-file
+  keys: "gg=G"
+  kind: command
+  category: editing/indent
+  description: Re-indent the whole file.
+  aliases:
+  - fix indentation of the whole file
+  - reindent everything
+  - auto format indentation of entire buffer
+  help_tag: "="
+  alternatives: [autoindent-line, op-autoindent]
+  options: ["cindent"]
+  example:
+    before: "if (x) {\n  ┃y();\n      }"
+    after: "if┃ (x) {\n    y();\n}"
+  verified: example
+
+- id: toggle-case-char
+  keys: "~"
+  kind: command
+  category: editing/case
+  description: Toggle the case of the character under the cursor and move right.
+  aliases:
+  - toggle case of a letter
+  - switch case of character
+  - capitalize one letter
+  help_tag: "~"
+  alternatives: [op-togglecase, uppercase-line]
+  example:
+    before: "┃hello"
+    after: "H┃ello"
+  verified: example
+
+- id: uppercase-line
+  keys: "gUU"
+  kind: command
+  category: editing/case
+  description: Make the whole line uppercase.
+  aliases:
+  - uppercase the line
+  - convert line to upper case
+  - capitalize whole line
+  help_tag: "gUU"
+  alternatives: [lowercase-line, uppercase-word, op-uppercase]
+  example:
+    before: "hel┃lo world"
+    after: "┃HELLO WORLD"
+  verified: example
+
+- id: lowercase-line
+  keys: "guu"
+  kind: command
+  category: editing/case
+  description: Make the whole line lowercase.
+  aliases:
+  - lowercase the line
+  - convert line to lower case
+  help_tag: "guu"
+  alternatives: [uppercase-line, op-lowercase]
+  example:
+    before: "HEL┃LO World"
+    after: "┃hello world"
+  verified: example
+
+- id: uppercase-word
+  keys: "gUiw"
+  kind: command
+  category: editing/case
+  description: Make the word under the cursor uppercase.
+  aliases:
+  - uppercase a word
+  - convert word to upper case
+  - capitalize the current word fully
+  help_tag: "gU"
+  alternatives: [lowercase-word, uppercase-line, capitalize-word]
+  example:
+    before: "one tw┃o three"
+    after: "one ┃TWO three"
+  verified: example
+
+- id: lowercase-word
+  keys: "guiw"
+  kind: command
+  category: editing/case
+  description: Make the word under the cursor lowercase.
+  aliases:
+  - lowercase a word
+  - convert word to lower case
+  help_tag: "gu"
+  alternatives: [uppercase-word, lowercase-line]
+  example:
+    before: "one TW┃O three"
+    after: "one ┃two three"
+  verified: example
+
+- id: capitalize-word
+  keys: "gUl"
+  kind: command
+  category: editing/case
+  description: Uppercase the character under the cursor (capitalize the first letter of a word).
+  aliases:
+  - capitalize first letter of word
+  - make first letter uppercase
+  - title case a word
+  help_tag: "gU"
+  alternatives: [uppercase-word, toggle-case-char]
+  example:
+    before: "one ┃two three"
+    after: "one ┃Two three"
+  verified: example
+
+- id: increment-number
+  keys: "<C-a>"
+  kind: command
+  category: editing/numbers
+  description: Add 1 to the number at or after the cursor.
+  aliases:
+  - increment number
+  - increase the number under the cursor
+  - add one to a number
+  help_tag: "CTRL-A"
+  alternatives: [decrement-number, increment-number-count]
+  example:
+    before: "ver┃sion 9"
+    after: "version 1┃0"
+  verified: example
+
+- id: increment-number-count
+  keys: "{count}<C-a>"
+  kind: command
+  category: editing/numbers
+  description: Add {count} to the number at or after the cursor.
+  aliases:
+  - add 10 to the number
+  - increase a number by a specific amount
+  help_tag: "CTRL-A"
+  alternatives: [increment-number, decrement-number]
+  example:
+    keys: "5<C-a>"
+    before: "┃x = 10"
+    after: "x = 1┃5"
+  verified: example
+
+- id: decrement-number
+  keys: "<C-x>"
+  kind: command
+  category: editing/numbers
+  description: Subtract 1 from the number at or after the cursor.
+  aliases:
+  - decrement number
+  - decrease the number under the cursor
+  - subtract one from a number
+  help_tag: "CTRL-X"
+  alternatives: [increment-number]
+  example:
+    before: "ver┃sion 10"
+    after: "version ┃9"
+  verified: example
+
+- id: insert-before
+  keys: "i"
+  kind: command
+  category: insert/enter
+  description: Enter insert mode before the cursor.
+  aliases:
+  - start typing
+  - enter insert mode
+  - insert text before cursor
+  help_tag: "i"
+  alternatives: [append-after, insert-line-start]
+  example:
+    keys: "iX<Esc>"
+    before: "ab┃cd"
+    after: "ab┃Xcd"
+  verified: example
+
+- id: append-after
+  keys: "a"
+  kind: command
+  category: insert/enter
+  description: Enter insert mode after the cursor.
+  aliases:
+  - append after cursor
+  - insert text after the cursor
+  help_tag: "a"
+  alternatives: [insert-before, append-eol]
+  example:
+    keys: "aX<Esc>"
+    before: "ab┃cd"
+    after: "abc┃Xd"
+  verified: example
+
+- id: insert-line-start
+  keys: "I"
+  kind: command
+  category: insert/enter
+  description: Insert at the first non-blank character of the line.
+  aliases:
+  - insert at beginning of line
+  - start typing at the start of the line
+  - prepend text to line
+  help_tag: "I"
+  alternatives: [append-eol, insert-before, insert-column-zero]
+  example:
+    keys: "IX<Esc>"
+    before: "    ab┃cd"
+    after: "    ┃Xabcd"
+  verified: example
+
+- id: insert-column-zero
+  keys: "gI"
+  kind: command
+  category: insert/enter
+  description: Insert at column 1, before any indentation.
+  aliases:
+  - insert at the very start of the line ignoring indent
+  - insert before indentation
+  help_tag: "gI"
+  alternatives: [insert-line-start]
+  example:
+    keys: "gIX<Esc>"
+    before: "    ab┃cd"
+    after: "┃X    abcd"
+  verified: example
+
+- id: append-eol
+  keys: "A"
+  kind: command
+  category: insert/enter
+  description: Append at the end of the line.
+  aliases:
+  - insert at end of line
+  - add text to the end of the line
+  - append to line
+  - type at the end of the line
+  help_tag: "A"
+  alternatives: [insert-line-start, append-after]
+  example:
+    keys: "A;<Esc>"
+    before: "a┃bc"
+    after: "abc┃;"
+  verified: example
+
+- id: open-below
+  keys: "o"
+  kind: command
+  category: insert/enter
+  description: Open a new line below the cursor and enter insert mode.
+  aliases:
+  - new line below
+  - insert a line after this one
+  - add a line underneath
+  help_tag: "o"
+  alternatives: [open-above]
+  example:
+    keys: "onew<Esc>"
+    before: "on┃e\ntwo"
+    after: "one\nne┃w\ntwo"
+  verified: example
+
+- id: open-above
+  keys: "O"
+  kind: command
+  category: insert/enter
+  description: Open a new line above the cursor and enter insert mode.
+  aliases:
+  - new line above
+  - insert a line before this one
+  - add a line on top
+  help_tag: "O"
+  alternatives: [open-below]
+  example:
+    keys: "Onew<Esc>"
+    before: "one\ntw┃o"
+    after: "one\nne┃w\ntwo"
+  verified: example
+
+- id: format-paragraph
+  keys: "gqap"
+  kind: command
+  category: editing/format
+  description: Re-wrap the current paragraph to 'textwidth'.
+  aliases:
+  - reformat paragraph
+  - wrap paragraph to 80 columns
+  - reflow the current paragraph
+  - hard wrap this paragraph
+  help_tag: "gq"
+  alternatives: [op-format, join-lines]
+  options: ["textwidth=20"]
+  example:
+    before: "┃one two three four five six seven\n\neight"
+    after: "one two three four\nfive six seven\n┃\neight"
+  verified: example
+
+- id: sort-lines
+  keys: ":sort"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Sort all lines of the buffer (or the selected range) alphabetically.
+  aliases:
+  - sort lines
+  - sort the file alphabetically
+  - order lines
+  help_tag: ":sort"
+  alternatives: [sort-unique, sort-numeric]
+  example:
+    before: "pear\n┃apple\nfig"
+    after: "┃apple\nfig\npear"
+  verified: example
+
+- id: sort-unique
+  keys: ":sort u"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Sort lines and remove duplicates.
+  aliases:
+  - remove duplicate lines
+  - sort and dedupe
+  - unique lines
+  help_tag: ":sort"
+  alternatives: [sort-lines]
+  example:
+    before: "b\n┃a\nb\na"
+    after: "┃a\nb"
+  verified: example
+
+- id: sort-numeric
+  keys: ":sort n"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Sort lines numerically.
+  aliases:
+  - sort numbers
+  - numeric sort of lines
+  help_tag: ":sort"
+  alternatives: [sort-lines]
+  example:
+    before: "10\n┃9\n100"
+    after: "┃9\n10\n100"
+  verified: example
+
+- id: reverse-lines
+  keys: ":g/^/m0"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Reverse the order of all lines.
+  aliases:
+  - reverse lines
+  - flip the file upside down
+  - invert line order
+  help_tag: ":g"
+  alternatives: [sort-lines]
+  example:
+    before: "┃one\ntwo\nthree"
+    after: "┃three\ntwo\none"
+  verified: example
+
+- id: delete-blank-lines
+  keys: ":g/^$/d"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Delete all empty lines.
+  aliases:
+  - remove blank lines
+  - delete empty lines
+  - strip blank lines from file
+  help_tag: ":g"
+  alternatives: [delete-matching-lines, squeeze-blank-lines]
+  example:
+    before: "┃one\n\ntwo\n\n\nthree"
+    after: "one\ntwo\n┃three"
+  verified: example
+
+- id: squeeze-blank-lines
+  keys: ":%s/\\n\\n\\+/\\r\\r/"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Collapse runs of blank lines into a single blank line.
+  aliases:
+  - remove consecutive blank lines
+  - squeeze multiple empty lines into one
+  help_tag: ":s"
+  alternatives: [delete-blank-lines]
+  example:
+    before: "┃one\n\n\n\ntwo"
+    after: "one\n\n┃two"
+  verified: example
+
+- id: delete-matching-lines
+  keys: ":g/{pattern}/d"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Delete every line matching {pattern}.
+  aliases:
+  - delete all lines containing a word
+  - remove lines that match
+  - delete lines with pattern
+  help_tag: ":g"
+  alternatives: [delete-nonmatching-lines, delete-blank-lines]
+  example:
+    keys: ":g/TODO/d"
+    before: "┃keep\nTODO x\nkeep too\nTODO y"
+    after: "keep\n┃keep too"
+  verified: example
+
+- id: delete-nonmatching-lines
+  keys: ":v/{pattern}/d"
+  kind: ex
+  mode: normal
+  category: editing/lines
+  description: Delete every line NOT matching {pattern} (keep only matching lines).
+  aliases:
+  - keep only lines containing a word
+  - delete lines that do not match
+  - filter lines to a pattern
+  help_tag: ":v"
+  alternatives: [delete-matching-lines]
+  example:
+    keys: ":v/TODO/d"
+    before: "┃keep\nTODO x\nkeep too\nTODO y"
+    after: "TODO x\n┃TODO y"
+  verified: example
+
+- id: trailing-whitespace
+  keys: ":%s/\\s\\+$//"
+  kind: ex
+  mode: normal
+  category: editing/whitespace
+  description: Remove trailing whitespace from every line.
+  aliases:
+  - strip trailing whitespace
+  - delete spaces at end of lines
+  - remove trailing spaces
+  help_tag: ":s"
+  alternatives: [retab]
+  example:
+    before: "┃one   \ntwo\t\nthree"
+    after: "one\n┃two\nthree"
+  verified: example
+
+- id: retab
+  keys: ":retab"
+  kind: ex
+  mode: normal
+  category: editing/whitespace
+  description: Convert tabs to spaces (with 'expandtab') or re-align tabs to 'tabstop'.
+  aliases:
+  - convert tabs to spaces
+  - replace tabs with spaces
+  - fix tabs
+  help_tag: ":retab"
+  alternatives: [trailing-whitespace]
+  example:
+    before: "\t┃one\n\t\ttwo"
+    after: "    ┃one\n        two"
+  verified: example
+
+- id: block-comment
+  keys: "<C-v>{motion}I{text}<Esc>"
+  kind: command
+  category: editing/block
+  description: Insert the same text at the start of several lines (visual block + I).
+  aliases:
+  - comment out multiple lines
+  - add a prefix to several lines
+  - insert text at the start of many lines
+  - prepend to multiple lines
+  help_tag: "v_b_I"
+  alternatives: [block-append, visual-indent]
+  example:
+    keys: "<C-v>jjI# <Esc>"
+    before: "┃one\ntwo\nthree"
+    after: "┃# one\n# two\n# three"
+  verified: example
+
+- id: block-append
+  keys: "<C-v>{motion}$A{text}<Esc>"
+  kind: command
+  category: editing/block
+  description: Append the same text at the end of several lines (visual block + $A).
+  aliases:
+  - add a semicolon to the end of multiple lines
+  - append text to several lines
+  - add suffix to many lines
+  help_tag: "v_b_A"
+  alternatives: [block-comment]
+  example:
+    keys: "<C-v>j$A;<Esc>"
+    before: "┃one\ntwo"
+    after: "┃one;\ntwo;"
+  verified: example
+
+- id: filter-count-lines-wc
+  keys: "g<C-g>"
+  kind: command
+  category: info
+  description: Show word, character, line and byte counts for the buffer.
+  aliases:
+  - word count
+  - count words in the file
+  - how many words
+  help_tag: "g_CTRL-G"
+  alternatives: [file-info]
+  effect: Prints "Col x of y; Line a of b; Word c of d; Byte e of f".
+  verified: tag
+
+- id: file-info
+  keys: "<C-g>"
+  kind: command
+  category: info
+  description: Show the file name, modified flag and position in the file.
+  aliases:
+  - show file name
+  - which file am i editing
+  - show current line number and file
+  help_tag: "CTRL-G"
+  alternatives: [filter-count-lines-wc, show-full-path]
+  effect: Prints the file name and cursor position on the command line.
+  verified: tag
+
+- id: show-full-path
+  keys: "1<C-g>"
+  kind: command
+  category: info
+  description: Show the full path of the current file.
+  aliases:
+  - full path of current file
+  - print absolute file name
+  help_tag: "CTRL-G"
+  alternatives: [file-info]
+  effect: Prints the full path on the command line.
+  verified: tag
+
+- id: char-info
+  keys: "ga"
+  kind: command
+  category: info
+  description: Show the ASCII/Unicode value of the character under the cursor.
+  aliases:
+  - show character code
+  - what is the unicode value of this character
+  - ascii code of character under cursor
+  help_tag: "ga"
+  alternatives: [file-info]
+  effect: Prints e.g. "<a> 97, Hex 61, Oct 141".
+  verified: tag

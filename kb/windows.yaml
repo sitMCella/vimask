@@ -1,0 +1,646 @@
+# Windows, buffers and tabs. These change the UI, not the text, so they are
+# tag-verified with an `effect` description.
+
+- id: window-split
+  keys: "<C-w>s"
+  kind: command
+  category: windows/split
+  description: Split the window horizontally.
+  aliases:
+  - split window
+  - horizontal split
+  - split the screen top and bottom
+  - open a split
+  help_tag: "CTRL-W_s"
+  alternatives: [window-vsplit, window-split-ex, window-close]
+  effect: The current window is split in two, both showing the same buffer.
+  verified: tag
+
+- id: window-split-ex
+  keys: ":split"
+  kind: ex
+  mode: normal
+  category: windows/split
+  description: Split the window horizontally (optionally :split file).
+  aliases:
+  - split with a colon command
+  - open file in horizontal split
+  - sp
+  help_tag: ":split"
+  alternatives: [window-split, window-vsplit-ex]
+  effect: The window is split horizontally; with a file name that file opens in the new window.
+  verified: tag
+
+- id: window-vsplit
+  keys: "<C-w>v"
+  kind: command
+  category: windows/split
+  description: Split the window vertically.
+  aliases:
+  - vertical split
+  - split the screen side by side
+  - open a vertical split
+  help_tag: "CTRL-W_v"
+  alternatives: [window-split, window-vsplit-ex]
+  effect: The current window is split left and right.
+  verified: tag
+
+- id: window-vsplit-ex
+  keys: ":vsplit"
+  kind: ex
+  mode: normal
+  category: windows/split
+  description: Split the window vertically (optionally :vsplit file).
+  aliases:
+  - vertical split with a colon command
+  - open file in vertical split
+  - vs
+  - vsp
+  help_tag: ":vsplit"
+  alternatives: [window-vsplit, window-split-ex]
+  effect: The window is split vertically; with a file name that file opens in the new window.
+  verified: tag
+
+- id: window-new
+  keys: ":new"
+  kind: ex
+  mode: normal
+  category: windows/split
+  description: Open a new empty buffer in a horizontal split.
+  aliases:
+  - new empty window
+  - open a scratch split
+  help_tag: ":new"
+  alternatives: [window-vnew, window-split-ex]
+  effect: A new window with an empty buffer appears above.
+  verified: tag
+
+- id: window-vnew
+  keys: ":vnew"
+  kind: ex
+  mode: normal
+  category: windows/split
+  description: Open a new empty buffer in a vertical split.
+  aliases:
+  - new empty vertical window
+  help_tag: ":vnew"
+  alternatives: [window-new, window-vsplit-ex]
+  effect: A new window with an empty buffer appears to the left.
+  verified: tag
+
+- id: window-next
+  keys: "<C-w>w"
+  kind: command
+  category: windows/navigate
+  description: Move the cursor to the next window.
+  aliases:
+  - switch window
+  - cycle through windows
+  - go to the other split
+  - move between splits
+  help_tag: "CTRL-W_w"
+  alternatives: [window-left, window-previous, window-right]
+  effect: Focus moves to the next window (wraps around).
+  verified: tag
+
+- id: window-previous
+  keys: "<C-w>p"
+  kind: command
+  category: windows/navigate
+  description: Go to the previously active window.
+  aliases:
+  - go back to the last window
+  - toggle between two windows
+  help_tag: "CTRL-W_p"
+  alternatives: [window-next]
+  effect: Focus returns to the window you came from.
+  verified: tag
+
+- id: window-left
+  keys: "<C-w>h"
+  kind: command
+  category: windows/navigate
+  description: Move the cursor to the window on the left.
+  aliases:
+  - go to the left split
+  - focus window to the left
+  help_tag: "CTRL-W_h"
+  alternatives: [window-right, window-down, window-up]
+  effect: Focus moves to the window left of the current one.
+  verified: tag
+
+- id: window-right
+  keys: "<C-w>l"
+  kind: command
+  category: windows/navigate
+  description: Move the cursor to the window on the right.
+  aliases:
+  - go to the right split
+  - focus window to the right
+  help_tag: "CTRL-W_l"
+  alternatives: [window-left, window-down, window-up]
+  effect: Focus moves to the window right of the current one.
+  verified: tag
+
+- id: window-down
+  keys: "<C-w>j"
+  kind: command
+  category: windows/navigate
+  description: Move the cursor to the window below.
+  aliases:
+  - go to the split below
+  - focus lower window
+  help_tag: "CTRL-W_j"
+  alternatives: [window-up, window-left, window-right]
+  effect: Focus moves to the window below.
+  verified: tag
+
+- id: window-up
+  keys: "<C-w>k"
+  kind: command
+  category: windows/navigate
+  description: Move the cursor to the window above.
+  aliases:
+  - go to the split above
+  - focus upper window
+  help_tag: "CTRL-W_k"
+  alternatives: [window-down, window-left, window-right]
+  effect: Focus moves to the window above.
+  verified: tag
+
+- id: window-close
+  keys: "<C-w>q"
+  kind: command
+  category: windows/close
+  description: Close the current window (quit it).
+  aliases:
+  - close split
+  - close the current window
+  - quit this window
+  help_tag: "CTRL-W_q"
+  alternatives: [window-close-ex, window-only, quit]
+  effect: The current window closes; if it is the last one, Vim exits.
+  verified: tag
+
+- id: window-close-ex
+  keys: ":close"
+  kind: ex
+  mode: normal
+  category: windows/close
+  description: Close the current window (never the last one).
+  aliases:
+  - close window with colon command
+  - close split but keep vim open
+  help_tag: ":close"
+  alternatives: [window-close, window-only]
+  effect: The current window closes; the buffer stays loaded.
+  verified: tag
+
+- id: window-only
+  keys: "<C-w>o"
+  kind: command
+  category: windows/close
+  description: Close all other windows, keeping only the current one.
+  aliases:
+  - close all other splits
+  - maximize the current window
+  - keep only this window
+  - only
+  help_tag: "CTRL-W_o"
+  alternatives: [window-close, window-only-ex]
+  effect: All windows except the current one are closed.
+  verified: tag
+
+- id: window-only-ex
+  keys: ":only"
+  kind: ex
+  mode: normal
+  category: windows/close
+  description: Close all other windows (ex command).
+  aliases:
+  - only command
+  help_tag: ":only"
+  alternatives: [window-only]
+  effect: All windows except the current one are closed.
+  verified: tag
+
+- id: window-equalize
+  keys: "<C-w>="
+  kind: command
+  category: windows/resize
+  description: Make all windows equal in size.
+  aliases:
+  - equalize split sizes
+  - make splits the same size
+  - reset window sizes
+  help_tag: "CTRL-W_="
+  alternatives: [window-maximize-height, window-resize-height]
+  effect: Windows are resized to equal heights and widths.
+  verified: tag
+
+- id: window-maximize-height
+  keys: "<C-w>_"
+  kind: command
+  category: windows/resize
+  description: Maximize the current window's height.
+  aliases:
+  - make the current split as tall as possible
+  - maximize window height
+  help_tag: "CTRL-W__"
+  alternatives: [window-maximize-width, window-equalize]
+  effect: The current window takes all available height.
+  verified: tag
+
+- id: window-maximize-width
+  keys: "<C-w>|"
+  kind: command
+  category: windows/resize
+  description: Maximize the current window's width.
+  aliases:
+  - make the current split as wide as possible
+  - maximize window width
+  help_tag: "CTRL-W_bar"
+  alternatives: [window-maximize-height, window-equalize]
+  effect: The current window takes all available width.
+  verified: tag
+
+- id: window-resize-height
+  keys: ":resize {N}"
+  kind: ex
+  mode: normal
+  category: windows/resize
+  description: Set the window height to {N} lines (:resize +5 / -5 adjusts).
+  aliases:
+  - resize split height
+  - make window taller or shorter
+  - set window height
+  help_tag: ":resize"
+  alternatives: [window-resize-width, window-equalize]
+  effect: The current window is resized to N lines.
+  verified: tag
+
+- id: window-resize-width
+  keys: ":vertical resize {N}"
+  kind: ex
+  mode: normal
+  category: windows/resize
+  description: Set the window width to {N} columns.
+  aliases:
+  - resize split width
+  - make window wider or narrower
+  - set window width
+  help_tag: ":vertical"
+  alternatives: [window-resize-height, window-equalize]
+  effect: The current window is resized to N columns.
+  verified: tag
+
+- id: window-increase-height
+  keys: "<C-w>+"
+  kind: command
+  category: windows/resize
+  description: Increase the window height by one line (use a count for more).
+  aliases:
+  - make split taller
+  - increase window height
+  help_tag: "CTRL-W_+"
+  alternatives: [window-decrease-height, window-resize-height]
+  effect: The current window grows by one line.
+  verified: tag
+
+- id: window-decrease-height
+  keys: "<C-w>-"
+  kind: command
+  category: windows/resize
+  description: Decrease the window height by one line.
+  aliases:
+  - make split shorter
+  - decrease window height
+  help_tag: "CTRL-W_-"
+  alternatives: [window-increase-height]
+  effect: The current window shrinks by one line.
+  verified: tag
+
+- id: window-increase-width
+  keys: "<C-w>>"
+  kind: command
+  category: windows/resize
+  description: Increase the window width by one column.
+  aliases:
+  - make split wider
+  - increase window width
+  help_tag: "CTRL-W_>"
+  alternatives: [window-decrease-width, window-resize-width]
+  effect: The current window grows by one column.
+  verified: tag
+
+- id: window-decrease-width
+  keys: "<C-w><"
+  kind: command
+  category: windows/resize
+  description: Decrease the window width by one column.
+  aliases:
+  - make split narrower
+  - decrease window width
+  help_tag: "CTRL-W_<"
+  alternatives: [window-increase-width]
+  effect: The current window shrinks by one column.
+  verified: tag
+
+- id: window-rotate
+  keys: "<C-w>r"
+  kind: command
+  category: windows/move
+  description: Rotate windows downwards/rightwards.
+  aliases:
+  - rotate splits
+  - swap the two windows
+  - switch the positions of splits
+  help_tag: "CTRL-W_r"
+  alternatives: [window-exchange, window-move-left]
+  effect: Windows in the current row or column rotate by one position.
+  verified: tag
+
+- id: window-exchange
+  keys: "<C-w>x"
+  kind: command
+  category: windows/move
+  description: Exchange the current window with the next one.
+  aliases:
+  - swap window with the next one
+  - exchange splits
+  help_tag: "CTRL-W_x"
+  alternatives: [window-rotate]
+  effect: The current and next window swap places.
+  verified: tag
+
+- id: window-move-left
+  keys: "<C-w>H"
+  kind: command
+  category: windows/move
+  description: Move the current window to the far left, full height.
+  aliases:
+  - move split to the left side
+  - turn horizontal split into vertical
+  - change split orientation
+  help_tag: "CTRL-W_H"
+  alternatives: [window-move-bottom, window-rotate]
+  effect: The window becomes a full-height window on the left.
+  verified: tag
+
+- id: window-move-bottom
+  keys: "<C-w>J"
+  kind: command
+  category: windows/move
+  description: Move the current window to the bottom, full width.
+  aliases:
+  - move split to the bottom
+  - turn vertical split into horizontal
+  help_tag: "CTRL-W_J"
+  alternatives: [window-move-left, window-rotate]
+  effect: The window becomes a full-width window at the bottom.
+  verified: tag
+
+- id: window-to-tab
+  keys: "<C-w>T"
+  kind: command
+  category: windows/tabs
+  description: Move the current window to a new tab page.
+  aliases:
+  - move split to its own tab
+  - open current window in new tab
+  help_tag: "CTRL-W_T"
+  alternatives: [tab-new, window-only]
+  effect: The window is removed from this tab and shown alone in a new tab.
+  verified: tag
+
+- id: buffer-list
+  keys: ":ls"
+  kind: ex
+  mode: normal
+  category: buffers
+  description: List all open buffers.
+  aliases:
+  - show open files
+  - list buffers
+  - which files are open
+  - buffers
+  help_tag: ":ls"
+  alternatives: [buffer-next, buffer-goto]
+  effect: Prints every buffer with its number, flags and name.
+  verified: tag
+
+- id: buffer-next
+  keys: ":bnext"
+  kind: ex
+  mode: normal
+  category: buffers
+  description: Go to the next buffer.
+  aliases:
+  - next buffer
+  - switch to the next open file
+  - bn
+  help_tag: ":bnext"
+  alternatives: [buffer-prev, buffer-alternate, buffer-goto]
+  effect: The window shows the next buffer in the list.
+  verified: tag
+
+- id: buffer-prev
+  keys: ":bprevious"
+  kind: ex
+  mode: normal
+  category: buffers
+  description: Go to the previous buffer.
+  aliases:
+  - previous buffer
+  - switch to the previous open file
+  - bp
+  help_tag: ":bprevious"
+  alternatives: [buffer-next, buffer-alternate]
+  effect: The window shows the previous buffer in the list.
+  verified: tag
+
+- id: buffer-goto
+  keys: ":buffer {N}"
+  kind: ex
+  mode: normal
+  category: buffers
+  description: Go to buffer number {N} (or :b name, with Tab completion).
+  aliases:
+  - switch to buffer by number
+  - open buffer 3
+  - jump to a specific buffer
+  help_tag: ":buffer"
+  alternatives: [buffer-list, buffer-alternate]
+  effect: The window shows the chosen buffer.
+  verified: tag
+
+- id: buffer-alternate
+  keys: "<C-^>"
+  kind: command
+  category: buffers
+  description: Switch to the alternate (previously edited) buffer.
+  aliases:
+  - toggle between two files
+  - go back to the last file
+  - switch to previous file
+  - alternate file
+  help_tag: "CTRL-^"
+  alternatives: [buffer-next, buffer-goto]
+  effect: The window shows the file you edited before this one.
+  verified: tag
+
+- id: buffer-delete
+  keys: ":bdelete"
+  kind: ex
+  mode: normal
+  category: buffers
+  description: Unload the current buffer and remove it from the buffer list.
+  aliases:
+  - close buffer
+  - close file without closing vim
+  - remove buffer from list
+  - bd
+  help_tag: ":bdelete"
+  alternatives: [buffer-list, window-close]
+  effect: The buffer is closed; the window shows another buffer.
+  verified: tag
+
+- id: tab-new
+  keys: ":tabnew"
+  kind: ex
+  mode: normal
+  category: tabs
+  description: Open a new tab page (optionally :tabnew file).
+  aliases:
+  - new tab
+  - open a file in a new tab
+  - create tab
+  help_tag: ":tabnew"
+  alternatives: [tab-close, tab-next, window-to-tab]
+  effect: A new tab page with an empty window appears.
+  verified: tag
+
+- id: tab-close
+  keys: ":tabclose"
+  kind: ex
+  mode: normal
+  category: tabs
+  description: Close the current tab page.
+  aliases:
+  - close tab
+  - close the current tab page
+  help_tag: ":tabclose"
+  alternatives: [tab-new, tab-only]
+  effect: The current tab closes.
+  verified: tag
+
+- id: tab-only
+  keys: ":tabonly"
+  kind: ex
+  mode: normal
+  category: tabs
+  description: Close all other tab pages.
+  aliases:
+  - close all other tabs
+  - keep only this tab
+  help_tag: ":tabonly"
+  alternatives: [tab-close]
+  effect: Every other tab page closes.
+  verified: tag
+
+- id: tab-next
+  keys: "gt"
+  kind: command
+  category: tabs
+  description: Go to the next tab page.
+  aliases:
+  - next tab
+  - switch tab
+  - cycle tabs forward
+  help_tag: "gt"
+  alternatives: [tab-prev, tab-goto]
+  effect: The next tab page becomes active (wraps around).
+  verified: tag
+
+- id: tab-prev
+  keys: "gT"
+  kind: command
+  category: tabs
+  description: Go to the previous tab page.
+  aliases:
+  - previous tab
+  - cycle tabs backward
+  help_tag: "gT"
+  alternatives: [tab-next]
+  effect: The previous tab page becomes active.
+  verified: tag
+
+- id: tab-goto
+  keys: "{N}gt"
+  kind: command
+  category: tabs
+  description: Go to tab page number {N}.
+  aliases:
+  - jump to tab 3
+  - go to a specific tab
+  help_tag: "gt"
+  alternatives: [tab-next]
+  effect: Tab page N becomes active.
+  verified: tag
+
+- id: tab-list
+  keys: ":tabs"
+  kind: ex
+  mode: normal
+  category: tabs
+  description: List all tab pages and their windows.
+  aliases:
+  - show tabs
+  - list tab pages
+  help_tag: ":tabs"
+  alternatives: [tab-next]
+  effect: Prints each tab page with the files in it.
+  verified: tag
+
+- id: tab-move
+  keys: ":tabmove {N}"
+  kind: ex
+  mode: normal
+  category: tabs
+  description: Move the current tab page to position {N} (0 = first, no argument = last).
+  aliases:
+  - reorder tabs
+  - move tab to the left or right
+  help_tag: ":tabmove"
+  alternatives: [tab-next]
+  effect: The tab page changes position.
+  verified: tag
+
+- id: terminal-open
+  keys: ":terminal"
+  kind: ex
+  mode: normal
+  category: terminal
+  description: Open a terminal window inside Vim/Neovim.
+  aliases:
+  - open a terminal
+  - run a shell inside vim
+  - embedded terminal
+  help_tag: ":terminal"
+  alternatives: [terminal-normal-mode]
+  effect: A terminal buffer opens running your shell (in Vim it splits; in Neovim it uses the current window).
+  verified: tag
+
+- id: terminal-normal-mode
+  keys: "<C-\\><C-n>"
+  kind: command
+  category: terminal
+  description: Leave terminal-job mode to normal mode (scroll, yank from the terminal).
+  aliases:
+  - escape the terminal
+  - get out of terminal mode
+  - scroll terminal output
+  help_tag: "CTRL-\\_CTRL-N"
+  alternatives: [terminal-open]
+  effect: The terminal buffer behaves like a normal buffer until you press i.
+  verified: tag

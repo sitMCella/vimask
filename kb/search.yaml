@@ -1,0 +1,444 @@
+# Search and substitute.
+
+- id: search-forward
+  keys: "/{pattern}"
+  kind: command
+  category: search
+  description: Search forward for {pattern}; press Enter, then n for the next match.
+  aliases:
+  - search for text
+  - find a word in the file
+  - search forward
+  - look for a string
+  help_tag: "/"
+  alternatives: [search-backward, search-next, search-word-under-cursor]
+  example:
+    keys: "/three<CR>"
+    before: "┃one two three two three"
+    after: "one two ┃three two three"
+  verified: example
+
+- id: search-backward
+  keys: "?{pattern}"
+  kind: command
+  category: search
+  description: Search backward for {pattern}.
+  aliases:
+  - search backwards
+  - find previous occurrence of text
+  - search upward
+  help_tag: "?"
+  alternatives: [search-forward, search-prev]
+  example:
+    keys: "?two<CR>"
+    before: "one two three two th┃ree"
+    after: "one two three ┃two three"
+  verified: example
+
+- id: search-next
+  keys: "n"
+  kind: command
+  category: search
+  description: Repeat the last search in the same direction.
+  aliases:
+  - next search result
+  - go to next match
+  - find next
+  - jump to next occurrence
+  help_tag: "n"
+  alternatives: [search-prev, search-forward]
+  setup_keys: "/two<CR>"
+  example:
+    before: "┃one two three two"
+    after: "one two three ┃two"
+  verified: example
+
+- id: search-prev
+  keys: "N"
+  kind: command
+  category: search
+  description: Repeat the last search in the opposite direction.
+  aliases:
+  - previous search result
+  - go to previous match
+  - find previous
+  - jump back to previous occurrence
+  help_tag: "N"
+  alternatives: [search-next]
+  setup_keys: "/two<CR>n"
+  example:
+    before: "┃one two three two"
+    after: "one ┃two three two"
+  verified: example
+
+- id: search-word-under-cursor
+  keys: "*"
+  kind: command
+  category: search
+  description: Search forward for the whole word under the cursor.
+  aliases:
+  - search for the word under the cursor
+  - find other occurrences of this word
+  - highlight all occurrences of current word
+  - star search
+  help_tag: "star"
+  alternatives: [search-word-under-cursor-back, search-word-partial, search-forward]
+  example:
+    before: "┃foo bar foo"
+    after: "foo bar ┃foo"
+  verified: example
+
+- id: search-word-under-cursor-back
+  keys: "#"
+  kind: command
+  category: search
+  description: Search backward for the whole word under the cursor.
+  aliases:
+  - search backward for word under cursor
+  - previous occurrence of this word
+  help_tag: "#"
+  alternatives: [search-word-under-cursor]
+  example:
+    before: "foo bar ┃foo"
+    after: "┃foo bar foo"
+  verified: example
+
+- id: search-word-partial
+  keys: "g*"
+  kind: command
+  category: search
+  description: Search forward for the word under the cursor, also matching inside other words.
+  aliases:
+  - search word under cursor without word boundaries
+  - find partial matches of current word
+  help_tag: "gstar"
+  alternatives: [search-word-under-cursor]
+  example:
+    before: "┃foo foobar"
+    after: "foo ┃foobar"
+  verified: example
+
+- id: substitute-line
+  keys: ":s/{pattern}/{replacement}/"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace the first match of {pattern} on the current line.
+  aliases:
+  - replace text on this line
+  - substitute on current line
+  - change one word on the line
+  help_tag: ":s"
+  alternatives: [substitute-line-all, substitute-all]
+  example:
+    keys: ":s/foo/bar/"
+    before: "┃foo foo"
+    after: "┃bar foo"
+  verified: example
+
+- id: substitute-line-all
+  keys: ":s/{pattern}/{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace every match of {pattern} on the current line.
+  aliases:
+  - replace all occurrences on this line
+  - substitute globally on current line
+  help_tag: ":s_g"
+  alternatives: [substitute-line, substitute-all]
+  example:
+    keys: ":s/foo/bar/g"
+    before: "┃foo foo"
+    after: "┃bar bar"
+  verified: example
+
+- id: substitute-all
+  keys: ":%s/{pattern}/{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace every match of {pattern} in the whole file.
+  aliases:
+  - find and replace in whole file
+  - replace all occurrences
+  - search and replace everywhere
+  - global replace
+  - substitute in entire buffer
+  help_tag: ":%"
+  alternatives: [substitute-all-confirm, substitute-line-all, substitute-word]
+  example:
+    keys: ":%s/foo/bar/g"
+    before: "┃foo x foo\nfoo"
+    after: "bar x bar\n┃bar"
+  verified: example
+
+- id: substitute-all-confirm
+  keys: ":%s/{pattern}/{replacement}/gc"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace every match in the file, asking for confirmation at each one.
+  aliases:
+  - find and replace with confirmation
+  - replace interactively
+  - ask before each replacement
+  help_tag: ":s_c"
+  alternatives: [substitute-all]
+  effect: For each match Vim asks "replace with ...? (y/n/a/q/l/^E/^Y)".
+  verified: tag
+
+- id: substitute-word
+  keys: ":%s/\\<{word}\\>/{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace whole-word matches of {word} only (not inside other words).
+  aliases:
+  - replace whole word only
+  - substitute word with word boundaries
+  - replace exact word not partial matches
+  help_tag: "/\\<"
+  alternatives: [substitute-all]
+  example:
+    keys: ":%s/\\<cat\\>/dog/g"
+    before: "┃cat catalog cat"
+    after: "┃dog catalog dog"
+  verified: example
+
+- id: substitute-case-insensitive
+  keys: ":%s/{pattern}\\c/{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace ignoring case (\\c in the pattern).
+  aliases:
+  - case insensitive replace
+  - replace regardless of case
+  help_tag: "/\\c"
+  alternatives: [substitute-all, search-ignorecase]
+  example:
+    keys: ":%s/foo\\c/bar/g"
+    before: "┃Foo FOO foo"
+    after: "┃bar bar bar"
+  verified: example
+
+- id: substitute-range
+  keys: ":{start},{end}s/{pattern}/{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace within a line range, e.g. lines 2 to 4.
+  aliases:
+  - replace only in some lines
+  - substitute within a range of lines
+  - replace between line numbers
+  help_tag: ":range"
+  alternatives: [substitute-all, visual-substitute]
+  example:
+    keys: ":2,3s/x/y/g"
+    before: "┃x\nx\nx\nx"
+    after: "x\ny\n┃y\nx"
+  verified: example
+
+- id: substitute-last-search
+  keys: ":%s//{replacement}/g"
+  kind: ex
+  mode: normal
+  category: search/substitute
+  description: Replace whatever was last searched for (empty pattern reuses the last search).
+  aliases:
+  - replace the last search pattern
+  - substitute using previous search
+  - replace what i just searched
+  help_tag: ":s"
+  alternatives: [substitute-all, search-forward]
+  setup_keys: "/foo<CR>"
+  example:
+    keys: ":%s//bar/g"
+    before: "┃x foo foo"
+    after: "┃x bar bar"
+  verified: example
+
+- id: repeat-substitute
+  keys: "&"
+  kind: command
+  category: search/substitute
+  description: Repeat the last :s on the current line (without flags).
+  aliases:
+  - repeat last substitute
+  - do the replacement again on this line
+  help_tag: "&"
+  alternatives: [repeat-substitute-all, repeat-change]
+  setup_keys: ":s/x/y/<CR>j"
+  example:
+    before: "┃x x\nx x"
+    after: "y x\n┃y x"
+  verified: example
+
+- id: repeat-substitute-all
+  keys: "g&"
+  kind: command
+  category: search/substitute
+  description: Repeat the last :s with the same flags on all lines.
+  aliases:
+  - repeat substitute on whole file
+  - apply the last replace to every line
+  help_tag: "g&"
+  alternatives: [repeat-substitute, substitute-all]
+  setup_keys: ":s/x/y/g<CR>"
+  example:
+    before: "┃x x\nx x"
+    after: "y y\n┃y y"
+  verified: example
+
+- id: search-nohighlight
+  keys: ":noh"
+  kind: ex
+  mode: normal
+  category: search
+  description: Turn off search highlighting until the next search.
+  aliases:
+  - clear search highlighting
+  - remove the yellow highlights
+  - stop highlighting search results
+  - unhighlight
+  help_tag: ":noh"
+  alternatives: [search-hlsearch-off]
+  effect: Current search highlights disappear; the pattern is kept.
+  verified: tag
+
+- id: search-hlsearch-off
+  keys: ":set nohlsearch"
+  kind: ex
+  mode: normal
+  category: search
+  description: Disable search highlighting permanently.
+  aliases:
+  - turn off search highlight option
+  - disable hlsearch
+  help_tag: "'hlsearch'"
+  alternatives: [search-nohighlight]
+  effect: Matches are no longer highlighted.
+  verified: tag
+
+- id: search-ignorecase
+  keys: ":set ignorecase smartcase"
+  kind: ex
+  mode: normal
+  category: search
+  description: Make searches case-insensitive unless the pattern has uppercase letters.
+  aliases:
+  - case insensitive search
+  - ignore case when searching
+  - smart case search
+  help_tag: "'smartcase'"
+  alternatives: [substitute-case-insensitive]
+  effect: Lowercase patterns match any case; patterns with capitals match exactly.
+  verified: tag
+
+- id: search-very-magic
+  keys: "/\\v{pattern}"
+  kind: command
+  category: search
+  description: Search with "very magic" regex syntax (no backslashes needed for + ( ) | etc).
+  aliases:
+  - use normal regex syntax in search
+  - search with extended regex
+  - very magic
+  help_tag: "/\\v"
+  alternatives: [search-forward]
+  example:
+    keys: "/\\v(two|three)+<CR>"
+    before: "┃one two three"
+    after: "one ┃two three"
+  verified: example
+
+- id: search-count-matches
+  keys: ":%s/{pattern}//gn"
+  kind: ex
+  mode: normal
+  category: search
+  description: "Count how many times {pattern} occurs (n flag: count only, no replacement)."
+  aliases:
+  - count occurrences of a word
+  - how many matches
+  - count matches in file
+  help_tag: ":s_flags"
+  alternatives: [search-forward]
+  effect: Prints "N matches on M lines"; nothing is changed.
+  verified: tag
+
+- id: search-history
+  keys: "q/"
+  kind: command
+  category: search
+  description: Open the search history window.
+  aliases:
+  - show previous searches
+  - search history
+  - edit a previous search
+  help_tag: "q/"
+  alternatives: [cmdline-window]
+  effect: A window with previous search patterns opens; Enter runs the chosen one.
+  verified: tag
+
+- id: match-paren-jump
+  keys: "[("
+  kind: command
+  category: search/brackets
+  description: Go to the previous unmatched (.
+  aliases:
+  - go to the enclosing open paren
+  - jump to the start of the current parenthesis
+  help_tag: "[("
+  alternatives: [match-paren-jump-close, mo-matching-bracket]
+  example:
+    before: "f(a, g(b), ┃c)"
+    after: "f┃(a, g(b), c)"
+  verified: example
+
+- id: match-paren-jump-close
+  keys: "])"
+  kind: command
+  category: search/brackets
+  description: Go to the next unmatched ).
+  aliases:
+  - go to the enclosing close paren
+  - jump to the end of the current parenthesis
+  help_tag: "])"
+  alternatives: [match-paren-jump, mo-matching-bracket]
+  example:
+    before: "f(a, g(b), ┃c)"
+    after: "f(a, g(b), c┃)"
+  verified: example
+
+- id: match-brace-jump
+  keys: "[{"
+  kind: command
+  category: search/brackets
+  description: Go to the previous unmatched {.
+  aliases:
+  - go to the start of the enclosing block
+  - jump to the opening brace of this block
+  help_tag: "[{"
+  alternatives: [match-brace-jump-close, mo-matching-bracket]
+  example:
+    before: "{ a; { b; } ┃c; }"
+    after: "┃{ a; { b; } c; }"
+  verified: example
+
+- id: match-brace-jump-close
+  keys: "]}"
+  kind: command
+  category: search/brackets
+  description: Go to the next unmatched }.
+  aliases:
+  - go to the end of the enclosing block
+  - jump to the closing brace of this block
+  help_tag: "]}"
+  alternatives: [match-brace-jump, mo-matching-bracket]
+  example:
+    before: "{ a; { b; } ┃c; }"
+    after: "{ a; { b; } c; ┃}"
+  verified: example

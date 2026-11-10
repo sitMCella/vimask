@@ -1,0 +1,216 @@
+# Operators: combined with a motion or text object (composer Stage B).
+
+- id: op-delete
+  keys: "d"
+  kind: operator
+  category: editing/operators
+  description: Delete the text covered by a motion or text object.
+  verb: Delete
+  aliases:
+  - delete operator
+  - delete text moved over
+  - cut text
+  help_tag: "d"
+  alternatives: [op-change, op-yank]
+  example:
+    keys: "dw"
+    before: "one ┃two three"
+    after: "one ┃three"
+  verified: example
+
+- id: op-change
+  keys: "c"
+  kind: operator
+  category: editing/operators
+  description: Delete the text covered by a motion or text object and start insert mode.
+  verb: Change
+  aliases:
+  - change operator
+  - replace text moved over and insert
+  - delete and start typing
+  help_tag: "c"
+  alternatives: [op-delete, substitute-char]
+  example:
+    keys: "cwTWO<Esc>"
+    before: "one ┃two three"
+    after: "one TW┃O three"
+  verified: example
+
+- id: op-yank
+  keys: "y"
+  kind: operator
+  category: editing/operators
+  description: Yank (copy) the text covered by a motion or text object.
+  verb: Yank
+  aliases:
+  - yank operator
+  - copy text moved over
+  - copy operator
+  help_tag: "y"
+  alternatives: [op-delete, yank-line]
+  example:
+    keys: "ywP"
+    before: "one ┃two three"
+    after: "one two┃ two three"
+  verified: example
+
+- id: op-indent
+  keys: ">"
+  kind: operator
+  category: editing/operators
+  description: Shift the lines covered by a motion one shiftwidth right.
+  verb: Indent
+  aliases:
+  - indent operator
+  - shift lines right
+  - increase indentation of lines moved over
+  help_tag: ">"
+  alternatives: [op-dedent, indent-line]
+  example:
+    keys: ">j"
+    before: "┃a\nb\nc"
+    after: "┃    a\n    b\nc"
+  verified: example
+
+- id: op-dedent
+  keys: "<"
+  kind: operator
+  category: editing/operators
+  description: Shift the lines covered by a motion one shiftwidth left.
+  verb: Unindent
+  aliases:
+  - unindent operator
+  - shift lines left
+  - decrease indentation of lines moved over
+  help_tag: "<"
+  alternatives: [op-indent, dedent-line]
+  example:
+    keys: "<j"
+    before: "    ┃a\n    b\n    c"
+    after: "┃a\nb\n    c"
+  verified: example
+
+- id: op-uppercase
+  keys: "gU"
+  kind: operator
+  category: editing/case
+  description: Make the text covered by a motion or text object uppercase.
+  verb: Uppercase
+  aliases:
+  - uppercase operator
+  - convert to upper case
+  - capitalize text moved over
+  help_tag: "gU"
+  alternatives: [op-lowercase, op-togglecase, uppercase-line]
+  example:
+    keys: "gUiw"
+    before: "one tw┃o three"
+    after: "one ┃TWO three"
+  verified: example
+
+- id: op-lowercase
+  keys: "gu"
+  kind: operator
+  category: editing/case
+  description: Make the text covered by a motion or text object lowercase.
+  verb: Lowercase
+  aliases:
+  - lowercase operator
+  - convert to lower case
+  help_tag: "gu"
+  alternatives: [op-uppercase, op-togglecase, lowercase-line]
+  example:
+    keys: "guiw"
+    before: "one TW┃O three"
+    after: "one ┃two three"
+  verified: example
+
+- id: op-togglecase
+  keys: "g~"
+  kind: operator
+  category: editing/case
+  description: Toggle the case of the text covered by a motion or text object.
+  verb: Toggle case of
+  aliases:
+  - toggle case operator
+  - switch case of text moved over
+  - invert case
+  help_tag: "g~"
+  alternatives: [op-uppercase, op-lowercase, toggle-case-char]
+  example:
+    keys: "g~iw"
+    before: "one Tw┃O three"
+    after: "one ┃tWo three"
+  verified: example
+
+- id: op-autoindent
+  keys: "="
+  kind: operator
+  category: editing/indent
+  description: Re-indent the lines covered by a motion using the current indent rules.
+  verb: Re-indent
+  aliases:
+  - auto indent operator
+  - fix indentation of lines
+  - reindent
+  - format indentation
+  help_tag: "="
+  alternatives: [op-indent, autoindent-file]
+  options: ["cindent"]
+  example:
+    keys: "=j"
+    before: "if (x) {\n┃  y();\n      }"
+    after: "if (x) {\n┃    y();\n}"
+  verified: example
+
+- id: op-format
+  keys: "gq"
+  kind: operator
+  category: editing/format
+  description: Format (re-wrap) the lines covered by a motion to 'textwidth'.
+  verb: Reflow
+  aliases:
+  - format text operator
+  - wrap lines to textwidth
+  - reflow paragraph
+  - hard wrap long lines
+  help_tag: "gq"
+  alternatives: [format-paragraph, join-lines]
+  options: ["textwidth=20"]
+  example:
+    keys: "gqq"
+    before: "┃one two three four five six seven"
+    after: "one two three four\n┃five six seven"
+  verified: example
+
+- id: op-rot13
+  keys: "g?"
+  kind: operator
+  category: editing/case
+  description: Rot13-encode the text covered by a motion or text object.
+  verb: Rot13-encode
+  aliases:
+  - rot13
+  - obfuscate text
+  help_tag: "g?"
+  alternatives: [op-togglecase]
+  example:
+    keys: "g?iw"
+    before: "one tw┃o three"
+    after: "one ┃gjb three"
+  verified: example
+
+- id: op-fold
+  keys: "zf"
+  kind: operator
+  category: folding
+  description: Create a fold over the lines covered by a motion or text object.
+  verb: Fold
+  aliases:
+  - create fold operator
+  - fold lines moved over
+  - make a fold
+  help_tag: "zf"
+  alternatives: [fold-open, fold-close]
+  effect: Lines become a closed fold (buffer text unchanged).
+  verified: tag
