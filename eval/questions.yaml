@@ -114,6 +114,11 @@
 - {q: "jump to end of file", expect: mo-file-end, tags: [motion]}
 - {q: "go to line number", expect: mo-goto-line, tags: [motion]}
 - {q: "jump to line 42", expect: mo-goto-line, tags: [motion, paraphrase]}
+- {q: "jump to line n", expect: mo-goto-line, tags: [motion, paraphrase, placeholder]}
+- {q: "jump to the line n", expect: mo-goto-line, tags: [motion, paraphrase, placeholder]}
+- {q: "how to move the cursor to the next 2 lines", expect: mo-down-count, tags: [motion, count]}
+- {q: "move up 5 lines", expect: mo-up-count, tags: [motion, count]}
+- {q: "how to access insert mode", expect: insert-before, tags: [insert, paraphrase]}
 - {q: "next word", expect: mo-word-forward, tags: [motion]}
 - {q: "previous word", expect: mo-word-backward, tags: [motion]}
 - {q: "end of word", expect: mo-word-end, tags: [motion]}

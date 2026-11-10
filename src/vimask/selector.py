@@ -57,6 +57,10 @@ class StageAResult:
     compose: bool = False
     raw: dict | None = None
     called: bool = False
+    # True when the model gave no usable output (timeout, connection error,
+    # unparsable JSON). Distinct from an empty ``ids`` list, which means the
+    # model looked at the candidates and rejected them all.
+    failed: bool = False
 
 
 @dataclass
@@ -84,6 +88,7 @@ def stage_a_prompt(question: str, candidates: list[Entry], previous: tuple[str, 
 def validate_stage_a(data: dict | None, candidates: list[Entry]) -> StageAResult:
     res = StageAResult(raw=data, called=True)
     if not data:
+        res.failed = True
         return res
     allowed = {e.id for e in candidates}
     ids = data.get("ids") or []

@@ -350,6 +350,42 @@
   sample: "line one\nline two\nline three\nli┃ne four\nline five"
   verified: example
 
+- id: mo-down-count
+  keys: "{count}j"
+  kind: command
+  category: movement/basic
+  description: Move the cursor down {count} lines.
+  aliases:
+  - move down several lines
+  - move the cursor down 3 lines
+  - go to the next 2 lines
+  - skip n lines down
+  help_tag: "j"
+  alternatives: [mo-down, mo-goto-line]
+  example:
+    keys: "2j"
+    before: "on┃e\ntwo\nthree\nfour"
+    after: "one\ntwo\nth┃ree\nfour"
+
+  verified: example
+- id: mo-up-count
+  keys: "{count}k"
+  kind: command
+  category: movement/basic
+  description: Move the cursor up {count} lines.
+  aliases:
+  - move up several lines
+  - move the cursor up 3 lines
+  - go to the previous 2 lines
+  - skip n lines up
+  help_tag: "k"
+  alternatives: [mo-up, mo-goto-line]
+  example:
+    keys: "2k"
+    before: "one\ntwo\nth┃ree\nfour"
+    after: "on┃e\ntwo\nthree\nfour"
+
+  verified: example
 - id: mo-left
   keys: "h"
   kind: motion
@@ -431,6 +467,7 @@
   - go to line number
   - jump to a specific line
   - move to line 42
+  - jump to line n
   help_tag: "G"
   alternatives: [goto-line-ex, mo-file-start]
   example:

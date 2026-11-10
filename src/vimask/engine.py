@@ -148,24 +148,21 @@ class Engine:
         else:
             fs, fm = self.cfg.fast_score_lexical_only, self.cfg.fast_margin_lexical_only
         fast = rr.top1.score >= fs and rr.margin >= fm
-        if fast or not self.use_selector:
-            if not fast and not self.use_selector:
-                # Retrieval-only mode cannot disambiguate: show medium confidence
-                # when the margin is small, fallback when top-1 is weak.
-                if rr.top1.score < self.cfg.answer_score_no_selector:
-                    trace.path = "fallback"
-                    trace.confidence = "low"
-                    return self._fallback(question, "match too weak without the selector")
-                conf = "medium" if rr.margin < fm else "high"
-            else:
-                conf = "high"
-            trace.path = "fast-path" if fast else "retrieval"
-            trace.confidence = conf
-            return self._answer_from_candidates(rr, [c.entry for c in rr.candidates], session, trace.path, conf)
+        if fast:
+            trace.path = "fast-path"
+            trace.confidence = "high"
+            return self._answer_from_candidates(rr, [c.entry for c in rr.candidates], session, "fast-path", "high")
+        if not self.use_selector:
+            return self._retrieval_only(question, rr, session, trace, fm)
 
         trace.selector_called = True
         cands = [c.entry for c in rr.candidates]
         sel = select_stage_a(self.client, question, cands, session.previous())
+        if sel.failed:
+            # Ollama timed out or returned garbage: answer as retrieval-only
+            # mode would instead of reporting "not found" for a KB entry.
+            trace.note = "selector unavailable"
+            return self._retrieval_only(question, rr, session, trace, fm)
         if sel.compose and not sel.ids:
             resp = self._compose(question, session, trace)
             if resp is not None:
@@ -183,9 +180,12 @@ class Engine:
         # 5. validate: confidence derived by code
         first = sel.ids[0]
         top_ids = [c.entry.id for c in rr.candidates]
+        top1 = rr.top1.entry
         if first == top_ids[0]:
             conf = "high"
-        elif first in top_ids[:3]:
+        elif first in top_ids[:3] or first in top1.alternatives or top1.id in self.kb.get(first).alternatives:
+            # Picking a declared alternative of retrieval's top-1 (e.g. :{count}
+            # for {count}G) is agreement, not disagreement.
             conf = "medium"
         else:
             conf = "low"
@@ -201,6 +201,20 @@ class Engine:
         return self._answer_from_candidates(rr, ordered, session, "selector", conf)
 
     # ---------------------------------------------------------------- helpers
+
+    def _retrieval_only(
+        self, question: str, rr: RetrievalResult, session: Session, trace: Trace, fast_margin: float
+    ) -> Response:
+        """Answer from retrieval alone: nothing can disambiguate, so require a
+        stronger top-1 and report medium confidence when the margin is small."""
+        if rr.top1.score < self.cfg.answer_score_no_selector:
+            trace.path = "fallback"
+            trace.confidence = "low"
+            return self._fallback(question, "match too weak without the selector")
+        conf = "medium" if rr.margin < fast_margin else "high"
+        trace.path = "retrieval"
+        trace.confidence = conf
+        return self._answer_from_candidates(rr, [c.entry for c in rr.candidates], session, "retrieval", conf)
 
     def _alts(self, primary: Entry, rest: list[Entry]) -> list[Entry]:
         out: list[Entry] = []

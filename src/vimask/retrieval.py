@@ -115,6 +115,11 @@ _SYNONYMS = {
     "everything": "entire",
     "file": "buffer",
     "document": "buffer",
+    # The KB writes numeric placeholders as both {N} and {count}; users write
+    # "line n". Fold them together so "jump to line n" meets "{count}G".
+    "n": "count",
+    "access": "enter",
+    "activate": "enter",
 }
 
 

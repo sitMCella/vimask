@@ -46,7 +46,9 @@ class Config:
     ollama_host: str = "http://localhost:11434"
     embed_model: str = "nomic-embed-text"
     selector_model: str = "qwen2.5:3b-instruct"
-    ollama_timeout: float = 20.0
+    # Generous on purpose: the first selector call after Ollama starts has to
+    # load the model, which takes well over 20 s on an 8 GB M1.
+    ollama_timeout: float = 60.0
     keep_alive: int = -1
     num_predict: int = 128
     seed: int = 7
